@@ -1,0 +1,11 @@
+{
+  "name": "Arrival Marine Multi (UTC)",
+  "short_name": "ArrivalMarine",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1565C0",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
