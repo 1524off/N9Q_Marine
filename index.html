@@ -3,67 +3,95 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Arrival Marine  (UTC / Navy)</title>
-<link rel="manifest" href="manifest.json" />
-<link rel="icon" href="icon.png" />
-<meta name="theme-color" content="#1565C0" />
+<title>Arrival Marine (🐶スマホ対応版)</title>
 <style>
   :root{
     --navy:#1565C0;
-    --bg:#ffffff;
-    --line:#e5e7eb;
+    --navy-light:#eaf2ff;
+    --bg:#f5f8ff;
     --text:#1f2937;
     --muted:#6b7280;
-    --btn:#1565C0;
-    --btn-text:#ffffff;
+    --line:#d1d5db;
   }
-  *{ box-sizing:border-box }
+  *{box-sizing:border-box;}
   body{
     margin:0; background:var(--bg); color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP","Yu Gothic",sans-serif;
   }
-  header{ text-align:center; padding:16px 12px 8px }
-  header h1{ margin:6px 0 4px; font-size:18px; color:var(--navy); }
-  header .clock{ display:inline-block; background:#eef3fb; color:var(--navy); padding:6px 10px; border-radius:8px; font-variant-numeric:tabular-nums; }
-  main{ max-width:860px; margin:0 auto; padding:12px; }
-  .card{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; margin:10px 0; }
-  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-  .row > div{ flex:1 1 160px; min-width:160px; }
-  label{ display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
+  header{text-align:center;padding:14px 10px;}
+  header .clock{
+    display:inline-block;
+    background:#eef3fb;
+    color:var(--navy);
+    padding:12px 20px;
+    border-radius:10px;
+    font-size:clamp(1.4rem,4vw,2.2rem);
+    font-weight:bold;
+    font-variant-numeric:tabular-nums;
+  }
+  main{max-width:860px;margin:0 auto;padding:10px;}
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:12px;margin:10px 0;box-shadow:0 1px 3px rgba(0,0,0,0.05);
+  }
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px;}
+  select,input,button{font-size:16px;border-radius:10px;}
   select,input[type="number"],input[type="text"]{
-    width:100%; padding:10px; border:1px solid var(--line); border-radius:8px; background:#fff; font-size:14px;
+    width:100%;padding:10px;border:1px solid var(--line);background:#fff;
   }
-  button{ background:var(--btn); color:var(--btn-text); border:none; padding:10px 14px; border-radius:10px; font-size:14px; }
-  button.secondary{ background:#f3f4f6; color:#111827; border:1px solid var(--line); }
-  table{ width:100%; border-collapse:collapse; }
-  th,td{ border:1px solid var(--line); padding:10px; text-align:center; font-size:14px; }
-  th{ background:#f7f9fc; color:#374151; }
-  tfoot td{ background:#fafafa; }
-  .actions{ display:flex; gap:8px; flex-wrap:wrap; }
-  .result-box{ white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px; }
+  button{
+    background:var(--navy);color:#fff;border:none;
+    padding:12px 16px;border-radius:10px;font-weight:600;
+  }
+  button.secondary{
+    background:#f3f4f6;color:#111827;border:1px solid var(--line);
+  }
+  .actions{display:flex;gap:8px;flex-wrap:wrap;}
+  table{width:100%;border-collapse:collapse;}
+  th,td{
+    border:1px solid var(--line);
+    padding:10px 4px;text-align:center;font-size:14px;
+  }
+  th{background:#f0f4ff;color:#1e3a8a;font-weight:600;}
+  td input[type="text"]{padding:6px 8px;}
+  tfoot td{background:#fafafa;}
+  .pet-status{font-weight:500;}
+  .pet-active{color:var(--navy);}
+  .pet-inactive{color:#9ca3af;}
+  #copyBox{
+    white-space:pre-wrap;
+    font-family:monospace;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px;
+    min-height:70px;
+  }
+  @media (max-width:600px){
+    th,td{font-size:13px;padding:6px;}
+    button{width:100%;font-size:15px;}
+  }
 </style>
 </head>
 <body>
+
 <header>
-  <h1>Arrival Marine （UTC）</h1>
   <div class="clock" id="utcClock">UTC: --:--:--</div>
 </header>
 
 <main>
   <section class="card">
-    <div class="row">
-      <div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <div style="flex:1 1 120px;">
         <label>準備時間（秒）</label>
         <select id="prep">
-          <option value="20">20</option>
-          <option value="30" selected>30</option>
-          <option value="40">40</option>
-          <option value="50">50</option>
+          <option value="30">30</option>
           <option value="60">60</option>
           <option value="90">90</option>
+          <option value="120">120</option>
         </select>
       </div>
-      <div>
+      <div style="flex:1 1 120px;">
         <label>集結時間（分）</label>
         <select id="rally">
           <option value="5" selected>5</option>
@@ -71,9 +99,10 @@
           <option value="15">15</option>
         </select>
       </div>
-      <div class="actions">
-        <button class="secondary" id="addBtn">＋ 追加</button>
+      <div class="actions" style="flex:1 1 100%;">
+        <button class="secondary" id="addBtn">＋追加</button>
         <button id="calcBtn">集結がきた！</button>
+        <span style="font-size:12px;color:#6b7280;">※被せ集結</span>
       </div>
     </div>
   </section>
@@ -82,29 +111,29 @@
     <table id="tbl">
       <thead>
         <tr>
-          <th style="width:36%">集結主</th>
+          <th style="width:5%">🐶</th>
+          <th style="width:30%">集結主</th>
           <th style="width:20%">行軍（秒）</th>
-          <th style="width:22%">出発（UTC）</th>
-          <th style="width:22%">着弾（UTC）</th>
+          <th style="width:25%">出発（UTC）</th>
+          <th style="width:20%">ペット</th>
         </tr>
       </thead>
       <tbody id="tbody">
         <tr>
-          <td><input type="text" placeholder="例：Marine" /></td>
-          <td><input type="number" min="0" step="1" value="300" /></td>
+          <td><input type="checkbox" class="pet"></td>
+          <td><input type="text" placeholder="例：Marine"></td>
+          <td>
+            <select class="march">
+              ${Array.from({length:168},(_,i)=>i+13).map(v=>`<option value="${v}">${v}秒</option>`).join('')}
+            </select>
+          </td>
           <td>-</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td><input type="text" placeholder="例：Yumi" /></td>
-          <td><input type="number" min="0" step="1" value="200" /></td>
-          <td>-</td>
-          <td>-</td>
+          <td class="pet-status pet-inactive">⚪ ―</td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="2" style="text-align:right; font-weight:600;">共通着弾（UTC）</td>
+          <td colspan="3" style="text-align:right;font-weight:600;">共通着弾（UTC）</td>
           <td colspan="2" id="commonImpact">-</td>
         </tr>
       </tfoot>
@@ -112,113 +141,113 @@
   </section>
 
   <section class="card">
-    <div class="row">
-      <div style="flex:1 1 100%">
-        <label>コピー用メッセージ</label>
-        <div class="result-box" id="copyBox">（計算するとここに整形テキストが出ます）</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="actions">
-        <button class="secondary" id="copyBtn">コピー</button>
-      </div>
+    <label>コピー用メッセージ</label>
+    <div id="copyBox">（計算するとここに整形テキストが出ます）</div>
+    <div style="margin-top:8px;">
+      <button class="secondary" id="copyBtn">コピー</button>
     </div>
   </section>
 
-  <footer style="text-align:center; color:#6b7280; font-size:12px; padding:10px 0 20px;">© Arrival Marine</footer>
+  <footer style="text-align:center;color:#6b7280;font-size:12px;padding:10px 0 20px;">
+    © Arrival Marine
+  </footer>
 </main>
 
 <script>
-// Utility
-function pad(n){ return String(n).padStart(2,'0'); }
-function fmtUTC(d){ return `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`; }
-function nowUTC(){ return new Date(); }
+function pad(n){return String(n).padStart(2,'0');}
+function fmtUTC(d){return `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;}
+function nowUTC(){return new Date();}
+function tickClock(){document.getElementById('utcClock').textContent=`UTC ${fmtUTC(nowUTC())}`;}
+setInterval(tickClock,1000);tickClock();
 
-// Live UTC clock
-function tickClock(){
-  const n = nowUTC();
-  document.getElementById('utcClock').textContent = `UTC: ${fmtUTC(n)}`;
-}
-setInterval(tickClock, 1000); tickClock();
-
-// Row management
-const tbody = document.getElementById('tbody');
-document.getElementById('addBtn').addEventListener('click', () => {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td><input type="text" placeholder="名前" /></td>
-    <td><input type="number" min="0" step="1" value="150" /></td>
-    <td>-</td>
-    <td>-</td>
-  `;
-  tbody.appendChild(tr);
-});
-
-// Core logic (your confirmed specification)
-document.getElementById('calcBtn').addEventListener('click', () => {
-  const prep = Number(document.getElementById('prep').value || 0);
-  const rallyMin = Number(document.getElementById('rally').value || 0);
-  const rows = Array.from(tbody.querySelectorAll('tr'));
-  const now = nowUTC();
-
-  // Gather data
-  const members = rows.map(r => {
-    const name = (r.children[0].querySelector('input').value || '').trim() || 'Player';
-    const march = Math.max(0, Number(r.children[1].querySelector('input').value || 0));
-    return { row: r, name, march };
-  }).filter(m => !isNaN(m.march));
-
-  if (members.length === 0){ return; }
-
-  const baseDepart = new Date(now.getTime() + prep * 1000); // 出発開始 = now + 準備
-  const maxMarch = Math.max(...members.map(m => m.march)); // 最遅
-
-  const target = new Date(baseDepart.getTime() + maxMarch * 1000 + rallyMin * 60 * 1000); // 共通着弾
-
-  // Fill results per member
-  members.forEach(m => {
-    const depart = new Date(baseDepart.getTime() + (maxMarch - m.march) * 1000); // 遅いほど早く出発
-    m.row.children[2].textContent = `${fmtUTC(depart)} UTC`;
-    m.row.children[3].textContent = `${fmtUTC(target)} UTC`;
-    m.depart = depart;
-  });
-
-  document.getElementById('commonImpact').textContent = `${fmtUTC(target)} UTC`;
-
-  // Build copy text
-  let lines = [];
-  lines.push('集結お願いします！🙇‍♂️🙇‍♂️✨');
-  lines.push(''); // blank line
-  members.forEach(m => {
-    lines.push(`${m.name}　${fmtUTC(m.depart)} UTC`); // full-width space between name and time
-  });
-  lines.push('');
-  lines.push(`着弾：${fmtUTC(target)} UTC`);
-
-  const msg = lines.join('\n');
-  document.getElementById('copyBox').textContent = msg;
-});
-
-document.getElementById('copyBtn').addEventListener('click', async () => {
-  const txt = document.getElementById('copyBox').textContent;
-  try{
-    await navigator.clipboard.writeText(txt);
-    alert('コピーしました。');
-  }catch(e){
-    // Fallback
-    const ta = document.createElement('textarea');
-    ta.value = txt; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    alert('コピーしました。');
-  }
-});
-
-// PWA
-if ('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+const PET_DURATION_MS=2*60*60*1000;
+function setPetListeners(){
+  document.querySelectorAll('.pet').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      const row=cb.closest('tr');
+      const cell=row.querySelector('.pet-status');
+      if(cb.checked){
+        const start=nowUTC(),end=new Date(start.getTime()+PET_DURATION_MS);
+        row.dataset.petEnd=end.getTime();
+        row.dataset.petState="active";
+        updatePetStatus(row);
+      }else clearPet(row);
+    });
   });
 }
+function clearPet(row){
+  const cell=row.querySelector('.pet-status');
+  delete row.dataset.petEnd;delete row.dataset.petState;
+  cell.textContent="⚪ ―";
+  cell.classList.remove('pet-active');cell.classList.add('pet-inactive');
+}
+function updatePetStatus(row){
+  const cell=row.querySelector('.pet-status');
+  if(!row.dataset.petEnd)return;
+  const diff=Number(row.dataset.petEnd)-nowUTC();
+  if(diff<=0){row.dataset.petState="expired";cell.textContent="⚫️ ―";return;}
+  row.dataset.petState="active";
+  const h=Math.floor(diff/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  cell.textContent=`🔵 ${h}:${pad(m)}:${pad(s)}`;
+}
+setInterval(()=>document.querySelectorAll('#tbody tr').forEach(updatePetStatus),1000);
+setPetListeners();
+
+document.getElementById('addBtn').addEventListener('click',()=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td><input type="checkbox" class="pet"></td>
+    <td><input type="text" placeholder="名前"></td>
+    <td>
+      <select class="march">
+        ${Array.from({length:168},(_,i)=>i+13).map(v=>`<option value="${v}">${v}秒</option>`).join('')}
+      </select>
+    </td>
+    <td>-</td>
+    <td class="pet-status pet-inactive">⚪ ―</td>`;
+  document.getElementById('tbody').appendChild(tr);setPetListeners();
+});
+
+document.getElementById('calcBtn').addEventListener('click',()=>{
+  const prep=+document.getElementById('prep').value;
+  const rallyMin=+document.getElementById('rally').value;
+  const rows=[...document.querySelectorAll('#tbody tr')];
+  const now=nowUTC();
+  const members=rows.map(r=>{
+    const name=r.children[1].querySelector('input').value.trim()||'Player';
+    const march=+r.querySelector('.march').value;
+    const petState=r.dataset.petState||"none";
+    return {r,name,march,petState};
+  });
+  if(!members.length)return;
+  const base=new Date(now.getTime()+prep*1000);
+  const max=Math.max(...members.map(m=>m.march));
+  const target=new Date(base.getTime()+max*1000+rallyMin*60*1000);
+  members.forEach(m=>{
+    const depart=new Date(base.getTime()+(max-m.march)*1000);
+    m.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
+    m.depart=depart;
+  });
+  document.getElementById('commonImpact').textContent=`${fmtUTC(target)} UTC`;
+
+  const lines=[`${rallyMin}分集結お願いします！🙇‍♂️🙇‍♂️✨`,""];
+  members.forEach(m=>{
+    let icon="⚪️";if(m.petState==="active")icon="🐶";else if(m.petState==="expired")icon="⚫️";
+    lines.push(`${icon}${m.name}　${fmtUTC(m.depart)} UTC`);
+  });
+  lines.push("",`着弾：${fmtUTC(target)} UTC`);
+  document.getElementById('copyBox').textContent=lines.join('\n');
+});
+
+document.getElementById('copyBtn').addEventListener('click',async()=>{
+  const txt=document.getElementById('copyBox').textContent;
+  try{await navigator.clipboard.writeText(txt);alert('コピーしました。');}
+  catch(e){const ta=document.createElement('textarea');
+    ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+    alert('コピーしました。');}
+});
 </script>
 </body>
 </html>
