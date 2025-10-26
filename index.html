@@ -7,7 +7,6 @@
 <style>
   :root{
     --navy:#1565C0;
-    --navy-light:#eaf2ff;
     --bg:#f5f8ff;
     --text:#1f2937;
     --muted:#6b7280;
@@ -20,13 +19,9 @@
   }
   header{text-align:center;padding:14px 10px;}
   header .clock{
-    display:inline-block;
-    background:#eef3fb;
-    color:var(--navy);
-    padding:12px 20px;
-    border-radius:10px;
-    font-size:clamp(1.4rem,4vw,2.2rem);
-    font-weight:bold;
+    display:inline-block;background:#eef3fb;color:var(--navy);
+    padding:12px 20px;border-radius:10px;
+    font-size:clamp(1.4rem,4vw,2.2rem);font-weight:bold;
     font-variant-numeric:tabular-nums;
   }
   main{max-width:860px;margin:0 auto;padding:10px;}
@@ -53,8 +48,6 @@
     padding:10px 4px;text-align:center;font-size:14px;
   }
   th{background:#f0f4ff;color:#1e3a8a;font-weight:600;}
-  td input[type="text"]{padding:6px 8px;}
-  tfoot td{background:#fafafa;}
   .pet-status{font-weight:500;}
   .pet-active{color:var(--navy);}
   .pet-inactive{color:#9ca3af;}
@@ -94,7 +87,7 @@
       <div style="flex:1 1 120px;">
         <label>集結時間（分）</label>
         <select id="rally">
-          <option value="5" selected>5</option>
+          <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
         </select>
@@ -113,7 +106,7 @@
         <tr>
           <th style="width:5%">🐶</th>
           <th style="width:30%">集結主</th>
-          <th style="width:20%">行軍（秒）</th>
+          <th style="width:20%">行軍（何分何秒）</th>
           <th style="width:25%">出発（UTC）</th>
           <th style="width:20%">ペット</th>
         </tr>
@@ -123,8 +116,8 @@
           <td><input type="checkbox" class="pet"></td>
           <td><input type="text" placeholder="例：Marine"></td>
           <td>
-            <select class="march">
-              ${Array.from({length:168},(_,i)=>i+13).map(v=>`<option value="${v}">${v}秒</option>`).join('')}
+            <select class="march" id="marchSelect">
+              <!-- 自動生成される -->
             </select>
           </td>
           <td>-</td>
@@ -154,12 +147,14 @@
 </main>
 
 <script>
+// === UTC時計 ===
 function pad(n){return String(n).padStart(2,'0');}
 function fmtUTC(d){return `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;}
 function nowUTC(){return new Date();}
 function tickClock(){document.getElementById('utcClock').textContent=`UTC ${fmtUTC(nowUTC())}`;}
 setInterval(tickClock,1000);tickClock();
 
+// === ペット状態 ===
 const PET_DURATION_MS=2*60*60*1000;
 function setPetListeners(){
   document.querySelectorAll('.pet').forEach(cb=>{
@@ -195,21 +190,50 @@ function updatePetStatus(row){
 setInterval(()=>document.querySelectorAll('#tbody tr').forEach(updatePetStatus),1000);
 setPetListeners();
 
+// === 行軍時間「何分何秒」プルダウン生成 ===
+function createMarchSelect() {
+  const select = document.createElement('select');
+  select.className = 'march';
+  for (let sec = 13; sec <= 180; sec++) {
+    const min = Math.floor(sec / 60);
+    const s = sec % 60;
+    const label = `${min}分${s.toString().padStart(2,'0')}秒`;
+    const opt = document.createElement('option');
+    opt.value = sec;
+    opt.textContent = label;
+    select.appendChild(opt);
+  }
+  return select.outerHTML;
+}
+document.addEventListener("DOMContentLoaded", () => {
+  const marchSelect = document.getElementById('marchSelect');
+  if (marchSelect) {
+    for (let sec = 13; sec <= 180; sec++) {
+      const min = Math.floor(sec / 60);
+      const s = sec % 60;
+      const label = `${min}分${s.toString().padStart(2,'0')}秒`;
+      const opt = document.createElement('option');
+      opt.value = sec;
+      opt.textContent = label;
+      marchSelect.appendChild(opt);
+    }
+  }
+});
+
+// === 行追加 ===
 document.getElementById('addBtn').addEventListener('click',()=>{
   const tr=document.createElement('tr');
   tr.innerHTML=`
     <td><input type="checkbox" class="pet"></td>
     <td><input type="text" placeholder="名前"></td>
-    <td>
-      <select class="march">
-        ${Array.from({length:168},(_,i)=>i+13).map(v=>`<option value="${v}">${v}秒</option>`).join('')}
-      </select>
-    </td>
+    <td>${createMarchSelect()}</td>
     <td>-</td>
     <td class="pet-status pet-inactive">⚪ ―</td>`;
-  document.getElementById('tbody').appendChild(tr);setPetListeners();
+  document.getElementById('tbody').appendChild(tr);
+  setPetListeners();
 });
 
+// === 計算ボタン ===
 document.getElementById('calcBtn').addEventListener('click',()=>{
   const prep=+document.getElementById('prep').value;
   const rallyMin=+document.getElementById('rally').value;
@@ -241,6 +265,7 @@ document.getElementById('calcBtn').addEventListener('click',()=>{
   document.getElementById('copyBox').textContent=lines.join('\n');
 });
 
+// === コピー機能 ===
 document.getElementById('copyBtn').addEventListener('click',async()=>{
   const txt=document.getElementById('copyBox').textContent;
   try{await navigator.clipboard.writeText(txt);alert('コピーしました。');}
