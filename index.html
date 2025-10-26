@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>集結時間計算機 © 1524 Off_Marine</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arrival Marine（UTC）</title>
 <style>
 :root {
-  --navy: #1565C0;
-  --bg: #f7f9ff;
-  --text: #1f2937;
-  --line: #d1d5db;
+  --navy:#1565C0;
+  --bg:#f7f9ff;
+  --text:#1f2937;
+  --line:#d1d5db;
 }
-
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
 }
-
-header { text-align:center; padding:18px 0 8px; }
+header {
+  background:var(--navy);
+  color:#fff;
+  text-align:center;
+  padding:10px 0 6px;
+  font-weight:600;
+}
 .clock {
-  background:#eef3fb; color:var(--navy);
-  display:inline-block; padding:10px 20px;
-  border-radius:10px; font-size:1.6rem;
-  font-weight:bold; font-variant-numeric:tabular-nums;
+  background:#eef3fb;
+  color:var(--navy);
+  display:inline-block;
+  padding:8px 16px;
+  border-radius:8px;
+  font-size:1.2rem;
+  font-variant-numeric:tabular-nums;
 }
-
-/* main */
-main {
-  max-width:850px; margin:0 auto; padding:10px;
-}
-
-/* カード */
+main {max-width:850px;margin:0 auto;padding:10px;}
 .card {
   background:#fff;
   border:1px solid var(--line);
@@ -40,81 +41,54 @@ main {
   padding:14px;
   margin:10px 0;
 }
-
-/* 上部設定 */
-.top-controls {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-  justify-content:space-between;
+h1 {font-size:1.2rem;text-align:center;margin:6px 0 4px;}
+select,input,button {
+  font-size:15px;
+  border-radius:8px;
 }
-
-select, input, button {
-  font-size:15px; border-radius:8px;
-}
-
-select, input[type="time"] {
+select,input[type="number"] {
   border:1px solid var(--line);
   padding:6px 8px;
 }
-
-/* ボタン */
-#addBtn,#removeBtn {
-  width:34px; height:34px; font-size:18px;
-  font-weight:bold; border:none; border-radius:8px;
-  line-height:1; cursor:pointer;
+button {
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
 }
-#addBtn { background:#f3f4f6; color:#111827; }
-#removeBtn { background:#fee2e2; color:#b91c1c; }
-
 #calcBtn {
   background:var(--navy);
   color:#fff;
   font-weight:700;
-  font-size:17px;
-  padding:14px 0;
-  border-radius:10px;
   border:none;
+  padding:10px 0;
+  border-radius:10px;
   width:100%;
   margin-top:10px;
-  box-shadow:0 3px 8px rgba(21,101,192,0.3);
 }
-#calcBtn:active {
-  transform:scale(0.97);
-  box-shadow:0 1px 3px rgba(21,101,192,0.2);
-}
-
-/* テーブル */
-table { width:100%; border-collapse:collapse; }
-th, td {
-  text-align:center;
-  padding:6px;
-  font-size:14px;
+#calcBtn:hover {background:#0b4aa8;}
+#addBtn,#removeBtn {
+  width:34px;height:34px;
   border:none;
+  border-radius:8px;
+  font-size:18px;
+  font-weight:bold;
 }
+#addBtn {background:#f3f4f6;color:#111827;}
+#removeBtn {background:#fee2e2;color:#b91c1c;}
+table {width:100%;border-collapse:collapse;margin-top:6px;}
+th,td {text-align:center;padding:6px;font-size:14px;border:none;}
 tbody tr:nth-child(odd){background:#f9fbff;}
-tbody tr:nth-child(even){background:#fff;}
-tr.pet-active-row {
-  background:#eaf2ff !important;
-  box-shadow:inset 0 0 0 2px #1565C0;
-}
-
-/* 共通着弾 */
-#impactDisplay {
-  margin-top:12px; text-align:center;
-}
-#impactDisplay #commonImpact {
-  font-size:2.2rem;
+tr.pet-active-row {background:#eaf2ff;}
+.pet-status {font-weight:500;}
+#impactDisplay {text-align:center;margin-top:12px;}
+#commonImpact {
+  font-size:1.8rem;
   font-weight:800;
-  color:#1565C0;
-  background:linear-gradient(90deg,#eaf2ff 0%,#d9e8ff 100%);
+  color:var(--navy);
+  background:#eef4ff;
   border-radius:10px;
   padding:6px 0;
-  letter-spacing:1px;
 }
-
-/* コピー欄 */
 #copyBox {
   white-space:pre-wrap;
   font-family:monospace;
@@ -124,69 +98,42 @@ tr.pet-active-row {
   padding:10px;
   min-height:70px;
 }
-.fade-out {opacity:0;transform:translateY(15px);transition:0.3s;}
-
-@media(max-width:600px){
-  .clock{font-size:1.4rem;}
+footer {
+  text-align:center;
+  color:#6b7280;
+  font-size:12px;
+  padding:10px 0 20px;
 }
 </style>
 </head>
 <body>
-<header><div class="clock" id="utcClock">UTC --:--:--</div></header>
+<header>
+  Arrival Marine（UTC）<br>
+  <div class="clock" id="utcClock">UTC --:--:--</div>
+</header>
 <main>
-
 <section class="card">
-  <div class="top-controls">
-    <div>
-      <button id="addBtn">＋</button>
-      <button id="removeBtn">−</button>
-    </div>
-    <div>モード：
-      <select id="mode">
-        <option value="normal" selected>被せ集結モード</option>
-        <option value="reverse">着時間指定モード</option>
-      </select>
-    </div>
-    <div>準備
-      <select id="prep">
-        <option>30</option><option>60</option><option>90</option><option>120</option>
-      </select>秒
-    </div>
-    <div>集結
-      <select id="rally">
-        <option>5</option><option>10</option><option>15</option>
-      </select>分
-    </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <button id="addBtn">＋</button>
+    <button id="removeBtn">−</button>
+    <div>準備 <select id="prep"><option>30</option><option>60</option><option>90</option><option>120</option></select> 秒</div>
+    <div>集結 <select id="rally"><option>5</option><option>10</option><option>15</option></select> 分</div>
   </div>
-
-  <div id="impactBox" style="margin-top:6px;display:none;">
-    <label style="font-size:13px;color:#6b7280;">共通着弾時刻（UTC）</label>
-    <input type="time" id="impactTime" step="1" value="12:10:00">
-  </div>
-
-  <button id="calcBtn">計算する</button>
-
-  <div style="text-align:right;margin-top:4px;">
-    <label style="font-size:14px;color:#374151;">
-      <input type="checkbox" id="togglePet" checked> ペットタイマーを表示
-    </label>
-  </div>
+  <button id="calcBtn">集結がきた！</button>
 </section>
 
 <section class="card">
   <table id="tbl">
-    <thead>
-      <tr>
-        <th>🐶</th><th>集結主</th><th>行軍</th><th>出発（UTC）</th><th>ペット</th>
-      </tr>
-    </thead>
+    <thead><tr>
+      <th>🐶</th><th>集結主</th><th>行軍(秒)</th><th>出発(UTC)</th><th>ペット</th>
+    </tr></thead>
     <tbody id="tbody">
       <tr>
         <td><input type="checkbox" class="pet"></td>
         <td><input type="text" placeholder="例：Marine"></td>
-        <td><select class="march" id="marchSelect"></select></td>
+        <td><input type="number" value="300" class="march"></td>
         <td>-</td>
-        <td class="pet-status pet-inactive">⚪ ―</td>
+        <td class="pet-status">⚪ ―</td>
       </tr>
     </tbody>
   </table>
@@ -199,35 +146,18 @@ tr.pet-active-row {
 <section class="card">
   <label>コピー用メッセージ</label>
   <div id="copyBox">（計算するとここに整形テキストが出ます）</div>
-  <div style="margin-top:8px;">
-    <button id="copyBtn">コピー</button>
-  </div>
+  <div style="margin-top:8px;"><button id="copyBtn">コピー</button></div>
 </section>
-
-<footer style="text-align:center;color:#6b7280;font-size:12px;padding:10px 0 20px;">
-  © 1524 Off_Marine
-</footer>
+<footer>© Arrival Marine</footer>
 </main>
 
 <script>
 function pad(n){return String(n).padStart(2,'0');}
 function fmtUTC(d){return `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;}
 function nowUTC(){return new Date();}
-function tickClock(){document.getElementById('utcClock').textContent=`UTC ${fmtUTC(nowUTC())}`;}
-setInterval(tickClock,1000);tickClock();
+setInterval(()=>{document.getElementById('utcClock').textContent=`UTC ${fmtUTC(nowUTC())}`;},1000);
 
-// 行軍プルダウン生成
-document.addEventListener("DOMContentLoaded",()=>{
-  const marchSelect=document.getElementById('marchSelect');
-  for(let sec=13;sec<=180;sec++){
-    const min=Math.floor(sec/60), s=sec%60;
-    const opt=document.createElement('option');
-    opt.value=sec;
-    opt.textContent=`${min}分${pad(s)}秒`;
-    marchSelect.appendChild(opt);
-  }
-});
-
+// ペットタイマー
 const PET_DURATION_MS=2*60*60*1000;
 function setPetListeners(){
   document.querySelectorAll('.pet').forEach(cb=>{
@@ -235,74 +165,47 @@ function setPetListeners(){
       const row=cb.closest('tr');
       const cell=row.querySelector('.pet-status');
       if(cb.checked){
-        const end=new Date(nowUTC().getTime()+PET_DURATION_MS);
-        row.dataset.petEnd=end.getTime();
+        row.dataset.petEnd=new Date(nowUTC().getTime()+PET_DURATION_MS).getTime();
         row.dataset.petState="active";
+        row.classList.add("pet-active-row");
         updatePetStatus(row);
-      } else clearPet(row);
+      }else{
+        delete row.dataset.petEnd;delete row.dataset.petState;
+        row.classList.remove("pet-active-row");
+        cell.textContent="⚪ ―";
+      }
     });
   });
 }
-function clearPet(row){delete row.dataset.petEnd;delete row.dataset.petState;row.classList.remove('pet-active-row');row.querySelector('.pet-status').textContent="⚪ ―";}
 function updatePetStatus(row){
   const cell=row.querySelector('.pet-status');
   if(!row.dataset.petEnd)return;
   const diff=Number(row.dataset.petEnd)-nowUTC();
   if(diff<=0){row.dataset.petState="expired";cell.textContent="⚫️ ―";row.classList.remove("pet-active-row");return;}
   const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-  cell.innerHTML=`🐶 発動中<br><span style="font-size:12px;color:#1565C0;">${h}:${pad(m)}:${pad(s)}</span>`;
-  row.classList.add("pet-active-row");
+  cell.textContent=`🐶 ${h}:${pad(m)}:${pad(s)}`;
 }
 setInterval(()=>document.querySelectorAll('#tbody tr').forEach(updatePetStatus),1000);
 setPetListeners();
 
-// ペット列表示切替
-document.getElementById('togglePet').addEventListener('change', e=>{
-  const table=document.getElementById('tbl');
-  if(e.target.checked)table.classList.remove('hide-pet');
-  else table.classList.add('hide-pet');
-});
-document.head.insertAdjacentHTML('beforeend',`
-<style>
-.hide-pet td:nth-child(1),.hide-pet td:nth-child(5),
-.hide-pet th:nth-child(1),.hide-pet th:nth-child(5){display:none;}
-</style>`);
-
-// ＋追加
+// 行追加削除
 document.getElementById('addBtn').addEventListener('click',()=>{
   const tr=document.createElement('tr');
   tr.innerHTML=`<td><input type="checkbox" class="pet"></td>
   <td><input type="text" placeholder="名前"></td>
-  <td>${document.getElementById('marchSelect').outerHTML}</td>
-  <td>-</td><td class="pet-status pet-inactive">⚪ ―</td>`;
+  <td><input type="number" class="march" value="0"></td>
+  <td>-</td><td class="pet-status">⚪ ―</td>`;
   document.getElementById('tbody').appendChild(tr);
   setPetListeners();
 });
-
-// −削除
 document.getElementById('removeBtn').addEventListener('click',()=>{
   const rows=document.querySelectorAll('#tbody tr');
-  if(rows.length===0){alert("削除できる行がありません。");return;}
-  const last=rows[rows.length-1];
-  if(confirm("この行を削除しますか？")){
-    last.classList.add('fade-out');
-    setTimeout(()=>last.remove(),300);
-  }
-});
-
-// モード切替
-document.getElementById('mode').addEventListener('change',()=>{
-  const mode=document.getElementById('mode').value;
-  const impactBox=document.getElementById('impactBox');
-  const impactDisplay=document.getElementById('impactDisplay');
-  if(mode==="reverse"){impactBox.style.display="block";impactDisplay.style.display="none";}
-  else{impactBox.style.display="none";impactDisplay.style.display="block";}
+  if(rows.length>0)rows[rows.length-1].remove();
 });
 
 // 計算
 document.getElementById('calcBtn').addEventListener('click',()=>{
   const rallyMin=+document.getElementById('rally').value;
-  const mode=document.getElementById('mode').value;
   const prep=+document.getElementById('prep').value;
   const rows=[...document.querySelectorAll('#tbody tr')];
   const now=nowUTC();
@@ -312,28 +215,15 @@ document.getElementById('calcBtn').addEventListener('click',()=>{
     const petState=r.dataset.petState||"none";
     return {r,name,march,petState};
   });
-  let target;
-  if(mode==="normal"){
-    const base=new Date(now.getTime()+prep*1000);
-    const max=Math.max(...members.map(m=>m.march));
-    target=new Date(base.getTime()+max*1000+rallyMin*60*1000);
-    members.forEach(m=>{
-      const depart=new Date(base.getTime()+(max-m.march)*1000);
-      m.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
-      m.depart=depart;
-    });
-    document.getElementById('commonImpact').textContent=`${fmtUTC(target)} UTC`;
-  } else {
-    const t=document.getElementById('impactTime').value.split(':');
-    const targetUTC=new Date(nowUTC());
-    targetUTC.setUTCHours(+t[0],+t[1],+t[2]||0,0);
-    target=targetUTC;
-    members.forEach(m=>{
-      const depart=new Date(target.getTime()-(rallyMin*60*1000)-(m.march*1000));
-      m.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
-      m.depart=depart;
-    });
-  }
+  const base=new Date(now.getTime()+prep*1000);
+  const max=Math.max(...members.map(m=>m.march));
+  const target=new Date(base.getTime()+max*1000+rallyMin*60*1000);
+  members.forEach(m=>{
+    const depart=new Date(base.getTime()+(max-m.march)*1000);
+    m.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
+    m.depart=depart;
+  });
+  document.getElementById('commonImpact').textContent=`${fmtUTC(target)} UTC`;
   const lines=[`${rallyMin}分集結お願いします！🙇‍♂️🙇‍♂️✨`,""];
   members.forEach(m=>{
     let icon="⚪️";if(m.petState==="active")icon="🐶";else if(m.petState==="expired")icon="⚫️";
@@ -347,9 +237,7 @@ document.getElementById('calcBtn').addEventListener('click',()=>{
 document.getElementById('copyBtn').addEventListener('click',async()=>{
   const txt=document.getElementById('copyBox').textContent;
   try{await navigator.clipboard.writeText(txt);alert('コピーしました。');}
-  catch{const ta=document.createElement('textarea');ta.value=txt;
-    document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
-    alert('コピーしました。');}
+  catch{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert('コピーしました。');}
 });
 </script>
 </body>
