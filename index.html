@@ -3,28 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>集結時間計算機</title>
-
-<!-- 📱 iPhone / PWA -->
+<title>集結時間計算機（1524 Off_Marine）</title>
 <link rel="icon" href="icon-1524.png">
 <link rel="apple-touch-icon" href="icon-1524.png">
-<meta name="apple-mobile-web-app-title" content="集結時間計算機">
-<meta name="application-name" content="集結時間計算機">
 <meta name="theme-color" content="#1565C0">
 
 <style>
-:root {
+:root{
   --navy:#1565C0;
   --bg:#f8faff;
   --text:#1f2937;
   --line:#d1d5db;
 }
-*{box-sizing:border-box;}
 body{
   margin:0;background:var(--bg);color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
 }
-header{text-align:center;padding:18px 0 8px;}
+header{text-align:center;padding:16px 0 8px;}
 .clock{
   background:#eef3fb;color:var(--navy);
   display:inline-block;padding:12px 20px;border-radius:10px;
@@ -33,32 +28,21 @@ header{text-align:center;padding:18px 0 8px;}
 main{max-width:860px;margin:0 auto;padding:10px;}
 .card{
   background:#fff;border:1px solid var(--line);border-radius:12px;
-  padding:14px;margin:10px 0;box-shadow:0 1px 2px rgba(0,0,0,0.02);
-}
-label{font-size:13px;color:#6b7280;margin-bottom:4px;display:block;}
-select,input,button{font-size:15px;border-radius:10px;}
-select,input[type="time"],input[type="text"]{
-  width:100%;padding:8px;border:1px solid var(--line);
+  padding:14px;margin:10px 0;box-shadow:0 1px 2px rgba(0,0,0,.02);
 }
 
-/* ＋−ボタン */
+/* ボタン */
 .small-btn{
   width:32px;height:32px;border-radius:50%;
   font-size:18px;font-weight:600;
   border:1px solid #d1d5db;background:#f9fafb;color:#4b5563;
-  transition:.2s;
 }
-.small-btn:hover{background:#e5e7eb;transform:translateY(-1px);}
-
-/* 計算ボタン */
 #calcBtn{
   width:100%;background:var(--navy);color:#fff;
   font-size:18px;font-weight:700;border:none;border-radius:10px;
   padding:14px 0;margin-top:12px;
-  box-shadow:0 3px 8px rgba(21,101,192,0.3);transition:all .2s;
+  box-shadow:0 3px 8px rgba(21,101,192,0.3);
 }
-#calcBtn:hover{background:#0b4aa8;transform:translateY(-1px);}
-#calcBtn:active{background:#09438d;transform:translateY(1px);}
 
 /* テーブル */
 table{width:100%;border-collapse:collapse;}
@@ -66,80 +50,90 @@ th,td{border:1px solid var(--line);padding:8px;text-align:center;font-size:14px;
 th{background:#f0f4ff;color:#1e3a8a;font-weight:600;}
 tbody tr:nth-child(odd){background:#fafbff;}
 
+/* ペット列非表示 */
+.hide-pet th:nth-child(1), .hide-pet th:nth-child(5),
+.hide-pet td:nth-child(1), .hide-pet td:nth-child(5){
+  display:none;
+}
+
 /* ペット状態 */
 .pet-status .time{font-size:12px;color:#1565C0;margin-left:4px;opacity:.85;}
 tr.pet-active-row{
   background:linear-gradient(90deg,#eaf2ff 0%,#d9e8ff 100%);
   box-shadow:inset 0 0 0 2px #1565C0;
-  transition:background .3s ease,box-shadow .3s ease;
 }
 tr.pet-expired-row{background:#f5f5f5;color:#9ca3af;}
 
-#copyBox{
-  white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;
-  background:#fff;border:1px solid var(--line);border-radius:10px;
-  padding:10px;min-height:70px;
-}
-@media(max-width:600px){
-  th,td{font-size:13px;padding:6px;}
-  .clock{font-size:1.4rem;}
+/* 共通着弾強調 */
+#impactDisplay{text-align:center;margin-top:10px;}
+#impactDisplay #commonImpact{
+  font-size:1.8rem;font-weight:700;color:#1565C0;
+  background:linear-gradient(90deg,#eaf2ff 0%,#d9e8ff 100%);
+  border-radius:10px;padding:8px 0;
+  box-shadow:0 1px 3px rgba(21,101,192,0.2);
 }
 </style>
 </head>
 <body>
 <header><div class="clock" id="utcClock">UTC --:--:--</div></header>
-
 <main>
-<section class="card">
-  <!-- ＋−とモード -->
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <div style="display:flex;gap:6px;">
-      <button id="addBtn" class="small-btn" title="行を追加">＋</button>
-      <button id="removeBtn" class="small-btn" title="最後の行を削除">−</button>
+
+<!-- モード＆時間設定 -->
+<section class="card" style="text-align:center;">
+  <div style="display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;">
+    <div style="display:flex;gap:4px;">
+      <button id="addBtn" class="small-btn">＋</button>
+      <button id="removeBtn" class="small-btn">−</button>
     </div>
-    <div style="flex:1;">
-      <label style="font-size:13px;color:#6b7280;margin:0 0 2px 0;">モード切り替え</label>
-      <select id="mode" style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:8px;">
-        <option value="normal" selected>被せ集結モード　※今すぐ</option>
-        <option value="reverse">着時間指定モード</option>
+    <span>モード：</span>
+    <select id="mode" style="padding:6px 8px;border:1px solid #d1d5db;border-radius:8px;">
+      <option value="normal" selected>被せ集結モード</option>
+      <option value="reverse">着時間指定モード</option>
+    </select>
+  </div>
+
+  <div style="display:flex;justify-content:center;gap:12px;margin-top:8px;flex-wrap:wrap;">
+    <div>
+      <label>準備</label>
+      <select id="prep" style="padding:6px 8px;border:1px solid #d1d5db;border-radius:8px;width:90px;">
+        <option value="30" selected>30秒</option>
+        <option value="60">60秒</option>
+        <option value="90">90秒</option>
+        <option value="120">120秒</option>
+      </select>
+    </div>
+    <div>
+      <label>集結</label>
+      <select id="rally" style="padding:6px 8px;border:1px solid #d1d5db;border-radius:8px;width:90px;">
+        <option value="5" selected>5分</option>
+        <option value="10">10分</option>
+        <option value="15">15分</option>
       </select>
     </div>
   </div>
 
-  <!-- 準備・集結 -->
-  <div style="display:flex;gap:10px;flex-wrap:wrap;">
-    <div style="flex:1 1 120px;">
-      <label>準備時間（秒）</label>
-      <select id="prep">
-        <option value="30">30</option>
-        <option value="60">60</option>
-        <option value="90">90</option>
-        <option value="120">120</option>
-      </select>
-    </div>
-    <div style="flex:1 1 120px;">
-      <label>集結時間（分）</label>
-      <select id="rally">
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="15">15</option>
-      </select>
-    </div>
-    <div id="impactBox" style="flex:1 1 170px;display:none;">
-      <label>共通着弾時刻（UTC）</label>
-      <input type="time" id="impactTime" step="1" value="12:10:00">
-    </div>
+  <div id="impactBox" style="margin-top:8px;display:none;">
+    <label style="font-size:13px;color:#6b7280;">共通着弾時刻（UTC）</label><br>
+    <input type="time" id="impactTime" step="1" value="12:10:00"
+           style="padding:6px 8px;border:1px solid #d1d5db;border-radius:8px;">
   </div>
 
   <button id="calcBtn">計算する</button>
 </section>
+
+<!-- ペットタイマー表示切替 -->
+<div style="text-align:right;margin:4px 0 0 0;">
+  <label style="font-size:14px;color:#374151;">
+    <input type="checkbox" id="togglePet" checked> ペットタイマーを表示
+  </label>
+</div>
 
 <!-- テーブル -->
 <section class="card">
   <table id="tbl">
     <thead>
       <tr>
-        <th>🐶</th><th>集結主</th><th>行軍（何分何秒）</th><th>出発（UTC）</th><th>ペット</th>
+        <th>🐶</th><th>集結主</th><th>行軍</th><th>出発（UTC）</th><th>ペット</th>
       </tr>
     </thead>
     <tbody id="tbody">
@@ -147,19 +141,22 @@ tr.pet-expired-row{background:#f5f5f5;color:#9ca3af;}
         <td><input type="checkbox" class="pet"></td>
         <td><input type="text" placeholder="例：Marine"></td>
         <td><select class="march" id="marchSelect"></select></td>
-        <td>-</td><td class="pet-status pet-inactive">⚪ ―</td>
+        <td>-</td>
+        <td class="pet-status pet-inactive">⚪ ―</td>
       </tr>
     </tbody>
-    <tfoot>
-      <tr><td colspan="3" style="text-align:right;font-weight:600;">共通着弾（UTC）</td><td colspan="2" id="commonImpact">-</td></tr>
-    </tfoot>
   </table>
+
+  <div id="impactDisplay">
+    <div style="font-size:14px;color:#6b7280;">🕒 共通着弾（UTC）</div>
+    <div id="commonImpact">--:--:--</div>
+  </div>
 </section>
 
 <!-- コピー -->
 <section class="card">
   <label>コピー用メッセージ</label>
-  <div id="copyBox">（計算するとここに整形テキストが出ます）</div>
+  <div id="copyBox" style="white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;min-height:70px;">（計算するとここに整形テキストが出ます）</div>
   <div style="margin-top:8px;">
     <button id="copyBtn" style="padding:10px 14px;border:1px solid var(--line);background:#f9fafb;border-radius:8px">コピー</button>
   </div>
@@ -177,13 +174,13 @@ const nowUTC = ()=>new Date();
 function tickClock(){document.getElementById('utcClock').textContent=`UTC ${fmtUTC(nowUTC())}`;}
 setInterval(tickClock,1000);tickClock();
 
-// 行軍時間生成
+// 行軍リスト生成
 document.addEventListener("DOMContentLoaded",()=>{
   const marchSelect=document.getElementById('marchSelect');
   for(let sec=13;sec<=180;sec++){
     const min=Math.floor(sec/60),s=sec%60;
     const opt=document.createElement('option');
-    opt.value=sec; opt.textContent=`${min}分${pad(s)}秒`;
+    opt.value=sec;opt.textContent=`${min}分${pad(s)}秒`;
     marchSelect.appendChild(opt);
   }
 });
@@ -206,7 +203,6 @@ function setPetListeners(){
     });
   });
 }
-
 function updatePetStatus(row){
   const cell=row.querySelector('.pet-status');
   if(!row.dataset.petEnd)return;
@@ -223,17 +219,23 @@ function updatePetStatus(row){
   row.classList.add("pet-active-row");
   row.classList.remove("pet-expired-row");
 }
-
 setInterval(()=>document.querySelectorAll('#tbody tr').forEach(updatePetStatus),1000);
 setPetListeners();
 
-// モード切替
-document.getElementById('mode').addEventListener('change',()=>{
-  const isReverse=document.getElementById('mode').value==="reverse";
-  document.getElementById('impactBox').style.display=isReverse?"block":"none";
+// ペット列表示切替
+document.getElementById('togglePet').addEventListener('change', e=>{
+  const table=document.getElementById('tbl');
+  if(e.target.checked)table.classList.remove('hide-pet');
+  else table.classList.add('hide-pet');
 });
 
-// 行追加
+// モード切替
+document.getElementById('mode').addEventListener('change',()=>{
+  document.getElementById('impactBox').style.display=
+    document.getElementById('mode').value==="reverse"?"block":"none";
+});
+
+// 行追加・削除
 document.getElementById('addBtn').addEventListener('click',()=>{
   const tr=document.createElement('tr');
   tr.innerHTML=`<td><input type="checkbox" class="pet"></td>
@@ -243,8 +245,6 @@ document.getElementById('addBtn').addEventListener('click',()=>{
   document.getElementById('tbody').appendChild(tr);
   setPetListeners();
 });
-
-// 行削除
 document.getElementById('removeBtn').addEventListener('click',()=>{
   const rows=document.querySelectorAll('#tbody tr');
   if(rows.length===0){alert("削除できる行がありません。");return;}
