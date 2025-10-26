@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Arrival Marine (🐶逆算対応 最適版)</title>
+<title>Arrival Marine (🐶削除ボタン付き)</title>
 <style>
   :root{
     --navy:#1565C0;
@@ -60,6 +60,12 @@
     padding:10px;
     min-height:70px;
   }
+  .delBtn{
+    background:none;
+    border:none;
+    font-size:18px;
+    cursor:pointer;
+  }
   @media (max-width:600px){
     th,td{font-size:13px;padding:6px;}
     button{width:100%;font-size:15px;}
@@ -74,11 +80,11 @@
 
 <main>
 
-  <!-- 🧭 モード切替 -->
+  <!-- 🧭 モード切り替え -->
   <section class="card">
     <label>モード切り替え</label>
     <select id="mode">
-      <option value="normal" selected>通常モード（今→着弾）</option>
+      <option value="normal" selected>被せ集結モード（今→着弾）</option>
       <option value="reverse">逆算モード（着弾→出発）</option>
     </select>
   </section>
@@ -109,7 +115,7 @@
       </div>
       <div class="actions" style="flex:1 1 100%;">
         <button class="secondary" id="addBtn">＋追加</button>
-        <button id="calcBtn">計算する</button>
+        <button id="calcBtn">敵集結がきた！</button>
       </div>
     </div>
   </section>
@@ -119,11 +125,12 @@
     <table id="tbl">
       <thead>
         <tr>
-          <th style="width:5%">🐶</th>
-          <th style="width:30%">集結主</th>
-          <th style="width:20%">行軍（何分何秒）</th>
-          <th style="width:25%">出発（UTC）</th>
-          <th style="width:20%">ペット</th>
+          <th>🐶</th>
+          <th>集結主</th>
+          <th>行軍（何分何秒）</th>
+          <th>出発（UTC）</th>
+          <th>ペット</th>
+          <th>🗑</th>
         </tr>
       </thead>
       <tbody id="tbody">
@@ -133,12 +140,13 @@
           <td><select class="march" id="marchSelect"></select></td>
           <td>-</td>
           <td class="pet-status pet-inactive">⚪ ―</td>
+          <td><button class="delBtn">🗑</button></td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td colspan="3" style="text-align:right;font-weight:600;">共通着弾（UTC）</td>
-          <td colspan="2" id="commonImpact">-</td>
+          <td colspan="3" id="commonImpact">-</td>
         </tr>
       </tfoot>
     </table>
@@ -165,7 +173,6 @@ function nowUTC(){return new Date();}
 function tickClock(){document.getElementById('utcClock').textContent=`UTC ${fmtUTC(nowUTC())}`;}
 setInterval(tickClock,1000);tickClock();
 
-// === ペット管理 ===
 const PET_DURATION_MS=2*60*60*1000;
 function setPetListeners(){
   document.querySelectorAll('.pet').forEach(cb=>{
@@ -179,11 +186,7 @@ function setPetListeners(){
     });
   });
 }
-function clearPet(row){
-  const cell=row.querySelector('.pet-status');
-  delete row.dataset.petEnd;delete row.dataset.petState;
-  cell.textContent="⚪ ―";
-}
+function clearPet(row){const cell=row.querySelector('.pet-status');delete row.dataset.petEnd;delete row.dataset.petState;cell.textContent="⚪ ―";}
 function updatePetStatus(row){
   const cell=row.querySelector('.pet-status');
   if(!row.dataset.petEnd)return;
@@ -196,48 +199,50 @@ function updatePetStatus(row){
 setInterval(()=>document.querySelectorAll('#tbody tr').forEach(updatePetStatus),1000);
 setPetListeners();
 
-// === 行軍時間セレクト生成 ===
 function createMarchSelect(){
-  const select=document.createElement('select');
-  select.className='march';
+  const select=document.createElement('select');select.className='march';
   for(let sec=13;sec<=180;sec++){
-    const min=Math.floor(sec/60);const s=sec%60;
+    const min=Math.floor(sec/60),s=sec%60;
     const opt=document.createElement('option');
-    opt.value=sec;opt.textContent=`${min}分${s.toString().padStart(2,'0')}秒`;
-    select.appendChild(opt);
+    opt.value=sec;opt.textContent=`${min}分${s.toString().padStart(2,'0')}秒`;select.appendChild(opt);
   }
   return select.outerHTML;
 }
 document.addEventListener("DOMContentLoaded",()=>{
   const marchSelect=document.getElementById('marchSelect');
   for(let sec=13;sec<=180;sec++){
-    const min=Math.floor(sec/60);const s=sec%60;
+    const min=Math.floor(sec/60),s=sec%60;
     const opt=document.createElement('option');
     opt.value=sec;opt.textContent=`${min}分${s.toString().padStart(2,'0')}秒`;
     marchSelect.appendChild(opt);
   }
 });
 
-// === モード切り替え ===
 document.getElementById('mode').addEventListener('change',()=>{
   const mode=document.getElementById('mode').value;
   document.getElementById('prepBox').style.display=(mode==="normal")?"block":"none";
   document.getElementById('impactBox').style.display=(mode==="reverse")?"block":"none";
 });
 
-// === 行追加 ===
+function setDeleteListeners(){
+  document.querySelectorAll('.delBtn').forEach(btn=>{
+    btn.onclick=()=>btn.closest('tr').remove();
+  });
+}
+setDeleteListeners();
+
 document.getElementById('addBtn').addEventListener('click',()=>{
   const tr=document.createElement('tr');
   tr.innerHTML=`<td><input type="checkbox" class="pet"></td>
   <td><input type="text" placeholder="名前"></td>
   <td>${createMarchSelect()}</td>
   <td>-</td>
-  <td class="pet-status pet-inactive">⚪ ―</td>`;
+  <td class="pet-status pet-inactive">⚪ ―</td>
+  <td><button class="delBtn">🗑</button></td>`;
   document.getElementById('tbody').appendChild(tr);
-  setPetListeners();
+  setPetListeners();setDeleteListeners();
 });
 
-// === 計算 ===
 document.getElementById('calcBtn').addEventListener('click',()=>{
   const rallyMin=+document.getElementById('rally').value;
   const mode=document.getElementById('mode').value;
@@ -250,7 +255,6 @@ document.getElementById('calcBtn').addEventListener('click',()=>{
     const petState=r.dataset.petState||"none";
     return {r,name,march,petState};
   });
-
   let target;
   if(mode==="normal"){
     const base=new Date(now.getTime()+prep*1000);
@@ -258,21 +262,17 @@ document.getElementById('calcBtn').addEventListener('click',()=>{
     target=new Date(base.getTime()+max*1000+rallyMin*60*1000);
     members.forEach(m=>{
       const depart=new Date(base.getTime()+(max-m.march)*1000);
-      m.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
-      m.depart=depart;
+      m.r.children[3].textContent=`${fmtUTC(depart)} UTC`;m.depart=depart;
     });
   }else{
     const t=document.getElementById('impactTime').value.split(':');
     const targetUTC=new Date(nowUTC());
-    targetUTC.setUTCHours(+t[0],+t[1],+t[2]||0,0);
-    target=targetUTC;
+    targetUTC.setUTCHours(+t[0],+t[1],+t[2]||0,0);target=targetUTC;
     members.forEach(m=>{
       const depart=new Date(target.getTime()-(rallyMin*60*1000)-(m.march*1000));
-      m.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
-      m.depart=depart;
+      m.r.children[3].textContent=`${fmtUTC(depart)} UTC`;m.depart=depart;
     });
   }
-
   document.getElementById('commonImpact').textContent=`${fmtUTC(target)} UTC`;
   const lines=[`${rallyMin}分集結お願いします！🙇‍♂️🙇‍♂️✨`,""];
   members.forEach(m=>{
@@ -283,7 +283,6 @@ document.getElementById('calcBtn').addEventListener('click',()=>{
   document.getElementById('copyBox').textContent=lines.join('\n');
 });
 
-// === コピー ===
 document.getElementById('copyBtn').addEventListener('click',async()=>{
   const txt=document.getElementById('copyBox').textContent;
   try{await navigator.clipboard.writeText(txt);alert('コピーしました。');}
