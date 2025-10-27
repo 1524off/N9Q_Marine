@@ -2,47 +2,67 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>集結時間計算機</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>集結時間計算機（スマホ版）</title>
 <style>
-:root{--navy:#1565C0;--bg:#f7f9ff;--text:#1f2937;--line:#e5e7eb;--muted:#6b7280}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif}
-header{text-align:center;padding:10px 0 6px}
-.clock{font-size:1.4rem;font-weight:800;color:var(--navy)}
-main{max-width:680px;margin:0 auto;padding:10px}
-.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
-
-label{font-size:13px;color:#374151}
-select,input[type="text"]{font-size:14px;padding:6px;border:1px solid var(--line);border-radius:8px;width:100%}
-
-button{border:none;border-radius:8px;font-weight:800;transition:.2s}
-.btn-primary{width:100%;padding:12px 0;background:var(--navy);color:#fff;margin-top:8px}
-.btn-primary:active{transform:scale(.98)}
-.small{width:auto;padding:6px 12px;font-size:18px;margin:4px;border-radius:8px}
-#addBtn{background:#e5e7eb}
-#removeBtn{background:#fee2e2;color:#b91c1c}
-
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;text-align:center;font-size:14px}
-th,td{border:1px solid var(--line);padding:6px}
-th{background:#f0f4ff;color:#0f4aa8;font-weight:700}
-tbody tr:nth-child(odd){background:#fcfdff}
-tr.pet-on{background:#eaf3ff !important;box-shadow:inset 0 0 0 2px #cfe2ff}
-.nameCell input{font-size:13px;padding:6px}
-
-/* ペット列の表示/非表示（先頭と最後の列） */
-.hide-pet th:first-child,.hide-pet td:first-child,
-.hide-pet th:last-child,.hide-pet td:last-child{display:none}
-
-#impactDisplay{margin:8px 0;text-align:center;color:var(--navy);font-weight:800}
-#impactText{font-size:1.2rem}
-
-#copyBox{white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;
-         background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;min-height:64px}
-footer{text-align:center;color:#9aa3b2;font-size:12px;padding:12px 0 20px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+:root{
+  --navy:#1565C0;
+  --bg:#f7faff;
+  --text:#1f2937;
+  --line:#d1d5db;
+}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
+}
+header{
+  text-align:center;padding:10px 0;
+  background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.05);
+  position:sticky;top:0;z-index:10;
+}
+.clock{font-size:1.6rem;font-weight:800;color:var(--navy);font-family:"Roboto Mono",monospace;}
+main{max-width:600px;margin:0 auto;padding:10px;}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);padding:14px;margin:10px 0;
+}
+label{font-size:13px;font-weight:600;color:#374151;}
+select,input[type="text"]{
+  width:100%;padding:7px 10px;font-size:15px;
+  border:1px solid var(--line);border-radius:8px;background:#f9fbff;
+}
+button{
+  border:none;border-radius:8px;font-weight:700;transition:.2s;cursor:pointer;
+}
+.btn-primary{
+  width:100%;padding:14px 0;font-size:1rem;
+  background:var(--navy);color:#fff;margin-top:10px;
+}
+.btn-primary:hover{background:#1976d2;}
+.small{
+  font-size:20px;padding:6px 12px;margin:3px;background:#eef3ff;color:#0f4aa8;
+}
+#removeBtn{background:#fee2e2;color:#b91c1c;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;text-align:center;font-size:14px;}
+th,td{border:1px solid var(--line);padding:8px;}
+th{background:#eef3ff;color:#0f4aa8;}
+tbody tr:nth-child(odd){background:#fafcff;}
+tr.pet-on{background:#eaf3ff!important;}
+#impactDisplay{text-align:center;color:var(--navy);font-weight:700;margin-top:10px;}
+#impactText{font-size:1.4rem;font-family:"Roboto Mono",monospace;}
+#copyBox{
+  background:#f5f8ff;border:1px solid var(--line);border-radius:10px;
+  font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap;
+  padding:10px;min-height:70px;line-height:1.5;font-size:15px;
+}
+footer{text-align:center;color:#9aa3b2;font-size:12px;padding:14px 0;}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+@media (max-width:480px){
+  select,input[type="text"]{font-size:14px;}
+  .btn-primary{font-size:16px;}
+  th,td{font-size:13px;padding:6px;}
+}
 </style>
 </head>
 <body>
@@ -51,203 +71,140 @@ footer{text-align:center;color:#9aa3b2;font-size:12px;padding:12px 0 20px}
 </header>
 
 <main>
-
-  <!-- モード & 設定（被せ / 着弾時刻指定） -->
-  <section class="card">
-    <label>モード選択：</label>
+<section class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <label>モード：</label>
     <select id="mode">
       <option value="normal" selected>被せ集結</option>
-      <option value="reverse">着弾時刻指定</option>
+      <option value="reverse">着弾指定</option>
     </select>
-
-    <!-- 被せ集結モード -->
-    <div id="normalBox" style="display:block;margin-top:8px">
-      <button id="calcBtnNormal" class="btn-primary">敵集結がきた！</button>
-      <div class="row" style="margin-top:6px">
-        <div style="flex:1">
-          <label>秒後に（プルダウン）</label>
-          <select id="prep">
-            <option>30</option><option>60</option><option>90</option><option>120</option>
-          </select>
-        </div>
-        <div style="flex:1">
-          <label>分集結（プルダウン）</label>
-          <select id="rally">
-            <option>5</option><option>10</option><option>15</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- 着弾時刻指定モード -->
-    <div id="reverseBox" style="display:none;margin-top:8px">
-      <label>着弾時刻（プルダウン）</label>
-      <div class="row">
-        <select id="hh" style="flex:1"></select> :
-        <select id="mm" style="flex:1"></select> :
-        <select id="ss" style="flex:1"></select>
-      </div>
-      <div class="row" style="margin-top:6px">
-        <div style="flex:1">
-          <label>分集結（プルダウン）</label>
-          <select id="rallyReverse">
-            <option>5</option><option>10</option><option>15</option>
-          </select>
-        </div>
-      </div>
-      <button id="calcBtnReverse" class="btn-primary">計算する</button>
-    </div>
-
-    <div class="row" style="justify-content:space-between;margin-top:6px">
-      <div>
-        <button id="addBtn" class="small">＋</button>
-        <button id="removeBtn" class="small">−</button>
-      </div>
-      <label><input type="checkbox" id="showPet" checked> ペット表示</label>
-    </div>
-  </section>
-
-  <!-- テーブル -->
-  <section class="card table-wrap">
-    <table id="tbl">
-      <thead>
-        <tr>
-          <th>🐶</th><th>集結主</th><th>行軍</th><th>出発(UTC)</th><th>🐶 残り</th>
-        </tr>
-      </thead>
-      <tbody id="tbody">
-        <tr>
-          <td><input type="checkbox" class="pet"></td>
-          <td class="nameCell"><input type="text" placeholder="例：Marine"></td>
-          <td><select class="march"></select></td>
-          <td>-</td>
-          <td class="pet-time">-</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 下部の共通着弾（※着弾指定モードでは非表示） -->
-  <div id="impactDisplay" style="display:block">
-    <div style="font-size:13px;color:#6b7280">共通着弾時刻</div>
-    <div id="impactText">--:--:-- UTC</div>
   </div>
 
-  <!-- コピー -->
-  <section class="card">
-    <label>コピー用メッセージ</label>
-    <div id="copyBox">（計算結果がここに表示されます）</div>
-    <button id="copyBtn" class="btn-primary" style="margin-top:6px">コピー</button>
-  </section>
+  <!-- 被せ集結 -->
+  <div id="normalBox" style="margin-top:8px;">
+    <div class="row">
+      <select id="prep">
+        <option>30</option><option>60</option><option>90</option><option>120</option>
+      </select> 秒後に
+      <select id="rally">
+        <option>5</option><option>10</option><option>15</option>
+      </select> 分集結
+    </div>
+    <button id="calcBtnNormal" class="btn-primary">💥 敵集結がきた！</button>
+  </div>
 
+  <!-- 着弾指定 -->
+  <div id="reverseBox" style="display:none;margin-top:10px;">
+    <div class="row">
+      <select id="hh"></select> : <select id="mm"></select> : <select id="ss"></select>
+    </div>
+    <div class="row">
+      <label>分集結</label>
+      <select id="rallyReverse"><option>5</option><option>10</option><option>15</option></select>
+    </div>
+    <button id="calcBtnReverse" class="btn-primary">計算する</button>
+  </div>
+
+  <div class="row" style="justify-content:space-between;margin-top:8px;">
+    <div>
+      <button id="addBtn" class="small">＋</button>
+      <button id="removeBtn" class="small">−</button>
+    </div>
+    <label><input type="checkbox" id="showPet" checked> ペット表示</label>
+  </div>
+</section>
+
+<section class="card table-wrap">
+  <table id="tbl">
+    <thead>
+      <tr><th>🐶</th><th>集結主</th><th>行軍</th><th>出発(UTC)</th><th>🐶 残り</th></tr>
+    </thead>
+    <tbody id="tbody">
+      <tr>
+        <td><input type="checkbox" class="pet"></td>
+        <td><input type="text" placeholder="例：Marine"></td>
+        <td><select class="march"></select></td>
+        <td>-</td><td class="pet-time">-</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div id="impactDisplay">
+  <div style="font-size:13px;color:#6b7280;">共通着弾時刻</div>
+  <div id="impactText">--:--:-- UTC</div>
+</div>
+
+<section class="card">
+  <label>コピー用メッセージ</label>
+  <div id="copyBox">（結果がここに表示されます）</div>
+  <button id="copyBtn" class="btn-primary">📋 コピー</button>
+</section>
 </main>
 
 <footer>© 1524 Off_Marine</footer>
 
 <script>
-/* ===== 共通ユーティリティ ===== */
-const pad=n=>String(n).padStart(2,'0');
-const fmt=(h,m,s)=>`${pad(h)}:${pad(m)}:${pad(s)}`;
-const fmtUTC=d=>fmt(d.getUTCHours(),d.getUTCMinutes(),d.getUTCSeconds());
+const pad=n=>String(n).padStart(2,"0");
+const fmtUTC=d=>`${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
 const nowUTC=()=>new Date();
-setInterval(()=>{document.getElementById('utcClock').textContent=fmtUTC(nowUTC());},1000);
+setInterval(()=>{document.getElementById("utcClock").textContent=fmtUTC(nowUTC());},1000);
 
-/* ===== 行軍プルダウン（34〜180秒） ===== */
+/* 行軍時間プルダウン（34〜180秒） */
 function fillMarch(sel){
   for(let s=34;s<=180;s++){
     const m=Math.floor(s/60),sec=s%60;
-    const label=(m?`${m}分`:'')+`${sec}秒`;
-    sel.add(new Option(label, s));
+    const label=(m?`${m}分`:"")+`${sec}秒`;
+    sel.add(new Option(label,s));
   }
 }
-document.querySelectorAll('.march').forEach(fillMarch);
+document.querySelectorAll(".march").forEach(fillMarch);
 
-/* ===== 着弾指定プルダウン =====
-   時：12〜16
-   分：0〜58（2分刻み）
-   秒：0〜50（10秒刻み） */
-(function fillImpactSelectors(){
-  const hh=document.getElementById('hh');
-  const mm=document.getElementById('mm');
-  const ss=document.getElementById('ss');
-  for(let h=12;h<=16;h++) hh.add(new Option(pad(h), pad(h)));
-  for(let m=0;m<60;m+=2) mm.add(new Option(pad(m), pad(m)));
-  for(let s=0;s<60;s+=10) ss.add(new Option(pad(s), pad(s)));
-  hh.value='12'; mm.value='00'; ss.value='00';
+/* 着弾指定プルダウン */
+(function(){
+  const hh=document.getElementById("hh"),mm=document.getElementById("mm"),ss=document.getElementById("ss");
+  for(let h=12;h<=16;h++)hh.add(new Option(pad(h),pad(h)));
+  for(let m=0;m<60;m+=2)mm.add(new Option(pad(m),pad(m)));
+  for(let s=0;s<60;s+=10)ss.add(new Option(pad(s),pad(s)));
+  hh.value="12";mm.value="00";ss.value="00";
 })();
 
-/* ===== モード切替 ===== */
-const modeSel=document.getElementById('mode');
-function applyMode(){
-  const reverse=modeSel.value==='reverse';
-  document.getElementById('normalBox').style.display= reverse?'none':'block';
-  document.getElementById('reverseBox').style.display= reverse?'block':'none';
-  // 下の共通着弾は「被せのみ」表示
-  document.getElementById('impactDisplay').style.display= reverse?'none':'block';
-}
-modeSel.addEventListener('change',applyMode); applyMode();
+/* モード切替 */
+const modeSel=document.getElementById("mode");
+modeSel.onchange=()=>{
+  const rev=modeSel.value==="reverse";
+  document.getElementById("normalBox").style.display=rev?"none":"block";
+  document.getElementById("reverseBox").style.display=rev?"block":"none";
+  document.getElementById("impactDisplay").style.display=rev?"none":"block";
+};
 
-/* ===== ペット列 表示/非表示 ===== */
-document.getElementById('showPet').addEventListener('change',e=>{
-  document.getElementById('tbl').classList.toggle('hide-pet',!e.target.checked);
-});
+/* ペット列表示 */
+document.getElementById("showPet").onchange=e=>{
+  document.getElementById("tbl").classList.toggle("hide-pet",!e.target.checked);
+};
 
-/* ===== 行追加/削除 ===== */
-document.getElementById('addBtn').addEventListener('click',()=>{
-  const tr=document.createElement('tr');
+/* 行追加/削除 */
+document.getElementById("addBtn").onclick=()=>{
+  const tr=document.createElement("tr");
   tr.innerHTML=`<td><input type="checkbox" class="pet"></td>
-    <td class="nameCell"><input type="text" placeholder="名前"></td>
-    <td><select class="march"></select></td>
-    <td>-</td><td class="pet-time">-</td>`;
-  document.getElementById('tbody').appendChild(tr);
-  fillMarch(tr.querySelector('.march'));
-  setPetHandlers();
-});
-document.getElementById('removeBtn').addEventListener('click',()=>{
-  const rows=document.querySelectorAll('#tbody tr');
-  if(rows.length>1) rows[rows.length-1].remove();
-});
+    <td><input type="text" placeholder="名前"></td>
+    <td><select class="march"></select></td><td>-</td><td class="pet-time">-</td>`;
+  document.getElementById("tbody").appendChild(tr);
+  fillMarch(tr.querySelector(".march"));
+};
+document.getElementById("removeBtn").onclick=()=>{
+  const rows=document.querySelectorAll("#tbody tr");
+  if(rows.length>1)rows[rows.length-1].remove();
+};
 
-/* ===== ペット：チェック=2時間カウント ===== */
-const PET_MS=2*60*60*1000;
-function setPetHandlers(){
-  document.querySelectorAll('.pet').forEach(cb=>{
-    cb.onchange=()=>{
-      const row=cb.closest('tr');
-      const cell=row.querySelector('.pet-time');
-      if(cb.checked){
-        row.dataset.petEnd=(Date.now()+PET_MS).toString();
-        row.classList.add('pet-on'); // ハイライト
-      }else{
-        delete row.dataset.petEnd;
-        row.classList.remove('pet-on');
-        cell.textContent='-';
-      }
-    };
-  });
-}
-setPetHandlers();
-
-/* 1秒ごとに残り時間更新 */
-setInterval(()=>{
-  document.querySelectorAll('#tbody tr').forEach(row=>{
-    if(!row.dataset.petEnd) return;
-    const diff=row.dataset.petEnd-Date.now();
-    const cell=row.querySelector('.pet-time');
-    if(diff<=0){row.classList.remove('pet-on');cell.textContent='⚫ 終了';delete row.dataset.petEnd;return;}
-    const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-    cell.textContent=`🐶 ${h}:${pad(m)}:${pad(s)}`;
-  });
-},1000);
-
-/* ===== 計算：被せ ===== */
+/* 計算ロジック（被せ） */
 function computeNormal(){
-  const rally=+document.getElementById('rally').value;   // 分
-  const prep =+document.getElementById('prep').value;    // 秒
-  const rows=[...document.querySelectorAll('#tbody tr')].map(r=>{
-    return {r, name:(r.querySelector('input[type=text]').value||'Player'),
-            march:+r.querySelector('.march').value};
-  });
+  const rally=+document.getElementById("rally").value;
+  const prep=+document.getElementById("prep").value;
+  const rows=[...document.querySelectorAll("#tbody tr")].map(r=>({
+    r,name:r.querySelector("input[type=text]").value||"Player",
+    march:+r.querySelector(".march").value
+  }));
   const now=nowUTC();
   const base=new Date(now.getTime()+prep*1000);
   const max=Math.max(...rows.map(x=>x.march),0);
@@ -257,54 +214,46 @@ function computeNormal(){
     x.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
     x.depart=depart;
   });
-  document.getElementById('impactText').textContent=`${fmtUTC(impact)} UTC`;
+  document.getElementById("impactText").textContent=`${fmtUTC(impact)} UTC`;
   renderCopy(rally,rows,impact);
 }
 
-/* ===== 計算：着弾時刻指定 ===== */
+/* 着弾指定 */
 function computeReverse(){
-  const rally=+document.getElementById('rallyReverse').value; // 分
-  const H=+document.getElementById('hh').value;
-  const M=+document.getElementById('mm').value;
-  const S=+document.getElementById('ss').value;
-  const target=new Date(nowUTC()); target.setUTCHours(H,M,S,0);
-
-  const rows=[...document.querySelectorAll('#tbody tr')].map(r=>{
-    return {r, name:(r.querySelector('input[type=text]').value||'Player'),
-            march:+r.querySelector('.march').value};
-  });
+  const rally=+document.getElementById("rallyReverse").value;
+  const H=+document.getElementById("hh").value,M=+document.getElementById("mm").value,S=+document.getElementById("ss").value;
+  const target=new Date(nowUTC());target.setUTCHours(H,M,S,0);
+  const rows=[...document.querySelectorAll("#tbody tr")].map(r=>({
+    r,name:r.querySelector("input[type=text]").value||"Player",
+    march:+r.querySelector(".march").value
+  }));
   rows.forEach(x=>{
     const depart=new Date(target.getTime()-rally*60*1000-x.march*1000);
     x.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
     x.depart=depart;
   });
-  // 被せ用の下部表示は隠しているが、コピー用には使う
   renderCopy(rally,rows,target);
 }
 
-/* ボタン紐付け */
-document.getElementById('calcBtnNormal').addEventListener('click',computeNormal);
-document.getElementById('calcBtnReverse').addEventListener('click',computeReverse);
+document.getElementById("calcBtnNormal").onclick=computeNormal;
+document.getElementById("calcBtnReverse").onclick=computeReverse;
 
-/* ===== コピー生成 ===== */
+/* コピー生成 */
 function renderCopy(rally,rows,impact){
-  const lines=[`${rally}分集結お願いします！🙇‍♂️✨`,''];
-  rows.forEach(x=>{
-    const icon = x.r.dataset.petEnd ? '🐶' : '⚪';
-    lines.push(`${icon}${x.name}　${fmtUTC(x.depart)} UTC`);
-  });
-  lines.push('',`着弾：${fmtUTC(impact)} UTC`);
-  document.getElementById('copyBox').textContent=lines.join('\n');
+  const lines=[`(${rally}分集結お願いします！)`,` `];
+  rows.forEach(x=>lines.push(`⚪${x.name}　${fmtUTC(x.depart)} UTC`));
+  lines.push(` `,`着弾：${fmtUTC(impact)} UTC`);
+  document.getElementById("copyBox").textContent=lines.join("\n");
 }
 
-/* ===== クリップボード ===== */
-document.getElementById('copyBtn').addEventListener('click',async()=>{
-  try{await navigator.clipboard.writeText(document.getElementById('copyBox').textContent);
-      alert('コピーしました！');}
-  catch{const ta=document.createElement('textarea');ta.value=document.getElementById('copyBox').textContent;
-        document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
-        alert('コピーしました！');}
-});
+/* コピー */
+document.getElementById("copyBtn").onclick=async()=>{
+  const text=document.getElementById("copyBox").textContent;
+  try{await navigator.clipboard.writeText(text);alert("コピーしました！");}
+  catch{const ta=document.createElement("textarea");ta.value=text;
+    document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+    alert("コピーしました！");}
+};
 </script>
 </body>
 </html>
