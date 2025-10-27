@@ -5,40 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Arrival Marine</title>
 <style>
-:root{--blue:#1565C0;--bg:#f5f8ff;--border:#d1d5db;--text:#1f2937;--muted:#6b7280;}
+:root{
+  --blue:#1565C0; --bg:#f5f8ff; --card:#ffffff; --border:#d1d5db; --text:#1f2937; --muted:#6b7280;
+  --row-active:#e6f1ff; /* ←ご指定の“淡い”青 */
+}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;color:var(--text);line-height:1.6}
-.container{max-width:520px;margin:16px auto;padding:0 12px}
-h1{font-size:1.1rem;margin:6px 0 12px;color:var(--blue)}
-.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.container{max-width:560px;margin:16px auto;padding:0 12px}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.header{text-align:center;margin:6px 0 10px}
+.utc-big{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+
+h1{font-size:1.05rem;margin:0;color:var(--blue)}
+.small{font-size:.9rem;color:var(--muted)}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}
 label{white-space:nowrap}
-select,input{font-size:0.95rem;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#fff}
+select,input{font-size:1rem;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#fff}
 button{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-weight:600;cursor:pointer}
+button:active{opacity:.9}
+
 .table{width:100%;border-collapse:collapse}
 .table th{font-size:.85rem;color:var(--muted);text-align:left;padding:6px 4px}
-.table td{padding:6px 4px;border-top:1px solid #eef2f7}
+.table td{padding:8px 4px;border-top:1px solid #eef2f7}
 .name-input{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:8px}
-.pet-col{width:120px;text-align:center}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;font-size:.9rem}
-.badge.active{background:#e6f1ff;color:#0b5bd3}
-.badge.wait{background:#f3f4f6;color:#374151}
-.badge.end{background:#eeeeee;color:#6b7280}
-.copy{white-space:pre-line;background:#f7faff;border:1px solid var(--border);border-radius:8px;padding:10px}
-.header{display:flex;justify-content:space-between;align-items:center;margin:6px 0 10px}
-.header .utc{font-weight:600;color:var(--text)}
+.icon-col,.pet-col{width:56px;text-align:center}
+.dep{white-space:nowrap}
+.row-active{background:var(--row-active)}
+.copy{white-space:pre-line;background:#f7faff;border:1px solid var(--border);border-radius:8px;padding:10px;min-height:3.2em}
+.hidden{display:none}
+.center{justify-content:center}
+.full{width:100%}
+.divider{height:1px;background:#e6eaf2;margin:10px 0;border-radius:1px}
 </style>
 </head>
 <body>
 <div class="container">
 
+  <!-- 上部：大きいUTC時計（リアルタイム） -->
   <div class="header">
-    <h1 id="mode-title">被せ集結</h1>
-    <div class="utc">UTC <span id="utc-now">--:--:--</span></div>
+    <div id="utc-now" class="utc-big">UTC --:--:--</div>
   </div>
 
-  <!-- モード切替 -->
+  <!-- 設定カード：モード・プルダウン・ボタン -->
   <div class="card">
+    <div class="row full">
+      <h1 style="margin-right:auto">被せ集結 / 着弾時刻指定</h1>
+      <label class="small"><input type="checkbox" id="pet-visibility" checked> ペット表示</label>
+    </div>
+
     <div class="row">
       <label>モード選択：</label>
       <select id="mode-select">
@@ -60,33 +75,42 @@ button{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:
     </div>
 
     <!-- 着弾時刻指定 -->
-    <div id="chakudan" class="row" style="display:none">
-      <select id="hh"><option>11</option><option selected>12</option><option>13</option><option>14</option><option>15</option></select> :
-      <select id="mm"><option>00</option><option selected>08</option><option>10</option><option>20</option><option>30</option><option>40</option><option>50</option></select> :
-      <select id="ss"><option selected>00</option><option>10</option><option>20</option><option>30</option><option>40</option><option>50</option></select>
+    <div id="chakudan" class="row hidden">
+      <span>着弾時刻：</span>
+      <select id="hh">
+        <option>11</option><option selected>12</option><option>13</option><option>14</option><option>15</option>
+      </select> :
+      <select id="mm">
+        <option>00</option><option selected>08</option><option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
+      </select> :
+      <select id="ss">
+        <option selected>00</option><option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
+      </select>
     </div>
 
-    <div class="row">
+    <div class="divider"></div>
+
+    <div class="row center">
       <button id="action-btn">敵集結がきた！</button>
-      <label><input type="checkbox" id="pet-visibility" checked> ペット表示</label>
     </div>
   </div>
 
-  <!-- 共通テーブル -->
+  <!-- テーブルカード：画像どおりの列構成 -->
   <div class="card">
     <table class="table" id="players">
       <thead>
         <tr>
-          <th style="width:40px">🐾</th>
+          <th class="icon-col">#</th>
           <th>集結主</th>
           <th style="width:110px">行軍(秒)</th>
-          <th style="width:120px">出発(UTC)</th>
+          <th style="width:130px">出発(UTC)</th>
           <th class="pet-col">ペット</th>
         </tr>
       </thead>
       <tbody>
+        <!-- 行1 -->
         <tr>
-          <td><input type="checkbox" class="pet-toggle"></td>
+          <td class="icon-col">1</td>
           <td><input class="name-input" value="Marine"></td>
           <td>
             <select class="march-sec">
@@ -94,12 +118,11 @@ button{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:
             </select>
           </td>
           <td class="dep">-</td>
-          <td class="pet-col">
-            <span class="badge wait"><span class="state-icon">⚪️</span><span class="state-text">まだ</span><span class="remain"></span></span>
-          </td>
+          <td class="pet-col"><span class="pet-icon" role="button" aria-label="pet">⚪️</span></td>
         </tr>
+        <!-- 行2 -->
         <tr>
-          <td><input type="checkbox" class="pet-toggle"></td>
+          <td class="icon-col">2</td>
           <td><input class="name-input" value="Yumi"></td>
           <td>
             <select class="march-sec">
@@ -107,15 +130,13 @@ button{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:
             </select>
           </td>
           <td class="dep">-</td>
-          <td class="pet-col">
-            <span class="badge wait"><span class="state-icon">⚪️</span><span class="state-text">まだ</span><span class="remain"></span></span>
-          </td>
+          <td class="pet-col"><span class="pet-icon" role="button" aria-label="pet">⚪️</span></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- コピー -->
+  <!-- コピー用カード -->
   <div class="card">
     <div class="row" style="justify-content:space-between">
       <strong>コピー用メッセージ</strong>
@@ -123,100 +144,130 @@ button{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:
     </div>
     <div id="copy" class="copy"></div>
   </div>
+
 </div>
 
 <script>
-// ======= UTC時計 =======
+/* ===== UTC時計（リアルタイム） ===== */
 function tickUTC(){
   const d=new Date();
   const hh=String(d.getUTCHours()).padStart(2,'0');
   const mm=String(d.getUTCMinutes()).padStart(2,'0');
   const ss=String(d.getUTCSeconds()).padStart(2,'0');
-  document.getElementById('utc-now').textContent=`${hh}:${mm}:${ss}`;
+  document.getElementById('utc-now').textContent=`UTC ${hh}:${mm}:${ss}`;
 }
 setInterval(tickUTC,1000); tickUTC();
 
-// ======= モード切替 =======
+/* ===== モード切替 ===== */
 const modeSel=document.getElementById('mode-select');
 const kabuse=document.getElementById('kabuse');
 const chakudan=document.getElementById('chakudan');
-const title=document.getElementById('mode-title');
 const actionBtn=document.getElementById('action-btn');
 
 modeSel.addEventListener('change',()=>{
   const m=modeSel.value;
-  if(m==='kabuse'){ title.textContent='被せ集結'; kabuse.style.display='flex'; chakudan.style.display='none'; actionBtn.textContent='敵集結がきた！'; }
-  else { title.textContent='着弾時刻指定'; kabuse.style.display='none'; chakudan.style.display='flex'; actionBtn.textContent='計算する'; }
+  if(m==='kabuse'){
+    kabuse.classList.remove('hidden');
+    chakudan.classList.add('hidden');
+    actionBtn.textContent='敵集結がきた！';
+  }else{
+    kabuse.classList.add('hidden');
+    chakudan.classList.remove('hidden');
+    actionBtn.textContent='計算する';
+  }
 });
 
-// ======= ペット列の表示 =======
+/* ===== ペット列 表示切替 ===== */
 const petVis=document.getElementById('pet-visibility');
 function togglePetColumn(show){
-  document.querySelectorAll('.pet-col').forEach(el=>el.style.display=show?'table-cell':'none');
+  document.querySelectorAll('.pet-col, .table th.pet-col').forEach(el=>{
+    el.style.display=show?'table-cell':'none';
+  });
 }
 petVis.addEventListener('change',()=>togglePetColumn(petVis.checked));
 togglePetColumn(petVis.checked);
 
-// ======= ペットカウント =======
-const TWO_HOURS=2*60*60;
-function formatHMS(sec){
-  const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
-  return `${String(h)}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-}
-function startPet(row){
-  const badge=row.querySelector('.badge'),icon=row.querySelector('.state-icon'),text=row.querySelector('.state-text'),remain=row.querySelector('.remain');
-  if(row.petTimer)clearInterval(row.petTimer);
-  row.petRemain=TWO_HOURS;
-  badge.className='badge active';icon.textContent='🐶';text.textContent='発動中';remain.textContent=' '+formatHMS(row.petRemain);
-  row.petTimer=setInterval(()=>{
-    row.petRemain--;
-    if(row.petRemain<=0){
-      clearInterval(row.petTimer);
-      badge.className='badge end';icon.textContent='⚫️';text.textContent='終了';remain.textContent='';
-      return;
-    }
-    remain.textContent=' '+formatHMS(row.petRemain);
-  },1000);
-}
-function stopPet(row){
-  if(row.petTimer)clearInterval(row.petTimer);
-  const b=row.querySelector('.badge'),i=row.querySelector('.state-icon'),t=row.querySelector('.state-text'),r=row.querySelector('.remain');
-  b.className='badge wait';i.textContent='⚪️';t.textContent='まだ';r.textContent='';
-}
-document.querySelectorAll('#players tbody tr').forEach(row=>{
-  row.querySelector('.pet-toggle').addEventListener('change',e=>{
-    if(e.target.checked)startPet(row);else stopPet(row);
-  });
-});
-
-// ======= コピー生成 =======
-document.getElementById('make-copy').addEventListener('click',()=>{
-  const lines=[];
-  document.querySelectorAll('#players tbody tr').forEach(row=>{
-    const n=row.querySelector('.name-input').value.trim()||'Player';
-    const dep=row.querySelector('.dep').textContent.trim()||'-';
-    const state=row.querySelector('.state-icon').textContent;
-    lines.push(`${state}${n} ${dep}`);
-  });
-  document.getElementById('copy').textContent=lines.join('\n');
-});
-
-// ======= 出発時刻（簡易計算） =======
+/* ===== ユーティリティ ===== */
 function pad2(n){return String(n).padStart(2,'0')}
+
+/* ===== ペット：クリックで ⚪️→🐶（2h）→⚫️。発動中は行色を淡く ===== */
+const TWO_HOURS = 2*60*60; // 秒
+document.querySelectorAll('#players tbody tr').forEach((row)=>{
+  const icon=row.querySelector('.pet-icon');
+  row.petState='idle';         // 'idle' | 'active' | 'ended'
+  row.petRemain=0;
+  row.petTimer=null;
+
+  function setRowActive(on){ row.classList.toggle('row-active',on); }
+
+  function toIdle(){
+    row.petState='idle';
+    icon.textContent='⚪️';
+    setRowActive(false);
+    if(row.petTimer){ clearInterval(row.petTimer); row.petTimer=null; }
+    row.petRemain=0;
+  }
+  function toActive(){
+    row.petState='active';
+    icon.textContent='🐶';
+    setRowActive(true);
+    row.petRemain=TWO_HOURS;
+    if(row.petTimer){ clearInterval(row.petTimer); }
+    row.petTimer=setInterval(()=>{
+      row.petRemain--;
+      if(row.petRemain<=0){
+        toEnded();
+      }
+    },1000);
+  }
+  function toEnded(){
+    row.petState='ended';
+    icon.textContent='⚫️';
+    setRowActive(false);
+    if(row.petTimer){ clearInterval(row.petTimer); row.petTimer=null; }
+    row.petRemain=0;
+    // ご指定どおり：自動リセットせず⚫️のまま（クリックで⚪️に戻せる）
+  }
+
+  icon.addEventListener('click',()=>{
+    if(row.petState==='idle'){ toActive(); }
+    else if(row.petState==='active'){ toIdle(); } // 発動中に再クリックでリセット
+    else if(row.petState==='ended'){ toIdle(); }  // 終了からはクリックで⚪️へ
+  });
+});
+
+/* ===== 出発時刻の一括計算 ===== */
 actionBtn.addEventListener('click',()=>{
-  const now=new Date();let arriveUtc;
+  const now=new Date();
+  let arriveUtc;
   if(modeSel.value==='kabuse'){
-    const after=parseInt(document.getElementById('after-sec').value),rally=parseInt(document.getElementById('rally-min').value);
+    const after=parseInt(document.getElementById('after-sec').value,10);
+    const rally=parseInt(document.getElementById('rally-min').value,10);
     arriveUtc=new Date(now.getTime()+after*1000+rally*60000);
   }else{
-    const h=parseInt(document.getElementById('hh').value),m=parseInt(document.getElementById('mm').value),s=parseInt(document.getElementById('ss').value);
-    const t=new Date();arriveUtc=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate(),h,m,s));
+    const h=parseInt(document.getElementById('hh').value,10);
+    const m=parseInt(document.getElementById('mm').value,10);
+    const s=parseInt(document.getElementById('ss').value,10);
+    const t=new Date();
+    arriveUtc=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate(),h,m,s));
   }
   document.querySelectorAll('#players tbody tr').forEach(row=>{
-    const sec=parseInt(row.querySelector('.march-sec').value);
+    const sec=parseInt(row.querySelector('.march-sec').value,10);
     const dep=new Date(arriveUtc.getTime()-sec*1000);
     row.querySelector('.dep').textContent=`${pad2(dep.getUTCHours())}:${pad2(dep.getUTCMinutes())}:${pad2(dep.getUTCSeconds())} UTC`;
   });
+});
+
+/* ===== コピー文 生成（画像の整列感を意識） ===== */
+document.getElementById('make-copy').addEventListener('click',()=>{
+  const lines=[];
+  document.querySelectorAll('#players tbody tr').forEach(row=>{
+    const name=(row.querySelector('.name-input').value||'Player').trim();
+    const dep=row.querySelector('.dep').textContent.trim()||'-';
+    const pet=row.querySelector('.pet-icon').textContent; // ⚪️/🐶/⚫️
+    lines.push(`${pet} ${name}　${dep}`);
+  });
+  document.getElementById('copy').textContent=lines.join('\n');
 });
 </script>
 </body>
