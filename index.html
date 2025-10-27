@@ -3,71 +3,130 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>集結時間計算機（スマホ版）</title>
+<title>Arrival Marine 集結計算</title>
 <style>
-:root{
-  --navy:#1565C0;
-  --bg:#f7faff;
-  --text:#1f2937;
-  --line:#d1d5db;
+:root {
+  --navy: #1565C0;
+  --bg: #f7f9ff;
+  --text: #1f2937;
+  --line: #d1d5db;
 }
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
 }
-header{
-  text-align:center;padding:10px 0;
-  background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.05);
-  position:sticky;top:0;z-index:10;
+header {
+  text-align: center;
+  padding: 14px 0 8px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
 }
-.clock{font-size:1.6rem;font-weight:800;color:var(--navy);font-family:"Roboto Mono",monospace;}
-main{max-width:600px;margin:0 auto;padding:10px;}
-.card{
-  background:#fff;border:1px solid var(--line);border-radius:12px;
-  box-shadow:0 1px 4px rgba(0,0,0,.06);padding:14px;margin:10px 0;
+.clock {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--navy);
+  font-family: "Roboto Mono", monospace;
 }
-label{font-size:13px;font-weight:600;color:#374151;}
-select,input[type="text"]{
-  width:100%;padding:7px 10px;font-size:15px;
-  border:1px solid var(--line);border-radius:8px;background:#f9fbff;
+main {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 10px;
 }
-button{
-  border:none;border-radius:8px;font-weight:700;transition:.2s;cursor:pointer;
+.card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
-.btn-primary{
-  width:100%;padding:14px 0;font-size:1rem;
-  background:var(--navy);color:#fff;margin-top:10px;
+label {
+  font-size: 13px;
+  color: #374151;
+  font-weight: 600;
 }
-.btn-primary:hover{background:#1976d2;}
-.small{
-  font-size:20px;padding:6px 12px;margin:3px;background:#eef3ff;color:#0f4aa8;
+select, input[type="text"] {
+  font-size: 15px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f9fbff;
+  width: 100%;
 }
-#removeBtn{background:#fee2e2;color:#b91c1c;}
-.table-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;text-align:center;font-size:14px;}
-th,td{border:1px solid var(--line);padding:8px;}
-th{background:#eef3ff;color:#0f4aa8;}
-tbody tr:nth-child(odd){background:#fafcff;}
-tr.pet-on{background:#eaf3ff!important;}
-#impactDisplay{text-align:center;color:var(--navy);font-weight:700;margin-top:10px;}
-#impactText{font-size:1.4rem;font-family:"Roboto Mono",monospace;}
-#copyBox{
-  background:#f5f8ff;border:1px solid var(--line);border-radius:10px;
-  font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap;
-  padding:10px;min-height:70px;line-height:1.5;font-size:15px;
+button {
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
 }
-footer{text-align:center;color:#9aa3b2;font-size:12px;padding:14px 0;}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-@media (max-width:480px){
-  select,input[type="text"]{font-size:14px;}
-  .btn-primary{font-size:16px;}
-  th,td{font-size:13px;padding:6px;}
+.btn-primary {
+  width: 100%;
+  background: var(--navy);
+  color: #fff;
+  font-size: 1rem;
+  padding: 12px 0;
+  margin-top: 10px;
+}
+.btn-primary:hover { background: #1976d2; }
+.small {
+  font-size: 18px;
+  padding: 6px 12px;
+  margin: 3px;
+  background: #eef3ff;
+  color: #0f4aa8;
+}
+#removeBtn { background: #fee2e2; color: #b91c1c; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
+th, td { border: 1px solid var(--line); padding: 8px; }
+th { background: #eef3ff; color: #0f4aa8; }
+tbody tr:nth-child(odd) { background: #fafcff; }
+tr.pet-on { background: #eaf3ff !important; }
+
+#impactDisplay {
+  text-align: center;
+  color: var(--navy);
+  font-weight: 700;
+  margin: 10px 0;
+}
+#impactText {
+  font-size: 1.4rem;
+  font-family: "Roboto Mono", monospace;
+}
+#copyBox {
+  background: #f5f8ff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  min-height: 64px;
+  white-space: pre-wrap;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+footer {
+  text-align: center;
+  color: #9aa3b2;
+  font-size: 12px;
+  padding: 16px 0 24px;
+}
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 </style>
 </head>
 <body>
 <header>
-  現在時刻　<span id="utcClock" class="clock">--:--:--</span> UTC
+  現在時刻 <span id="utcClock" class="clock">--:--:--</span> UTC
 </header>
 
 <main>
@@ -145,114 +204,71 @@ footer{text-align:center;color:#9aa3b2;font-size:12px;padding:14px 0;}
 <footer>© 1524 Off_Marine</footer>
 
 <script>
+// --- 時計 ---
 const pad=n=>String(n).padStart(2,"0");
 const fmtUTC=d=>`${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
 const nowUTC=()=>new Date();
 setInterval(()=>{document.getElementById("utcClock").textContent=fmtUTC(nowUTC());},1000);
 
-/* 行軍時間プルダウン（34〜180秒） */
-function fillMarch(sel){
-  for(let s=34;s<=180;s++){
-    const m=Math.floor(s/60),sec=s%60;
-    const label=(m?`${m}分`:"")+`${sec}秒`;
-    sel.add(new Option(label,s));
-  }
-}
+// --- 行軍 ---
+function fillMarch(sel){for(let s=34;s<=180;s++){const m=Math.floor(s/60),sec=s%60;sel.add(new Option((m?`${m}分`:"")+`${sec}秒`,s));}}
 document.querySelectorAll(".march").forEach(fillMarch);
 
-/* 着弾指定プルダウン */
-(function(){
-  const hh=document.getElementById("hh"),mm=document.getElementById("mm"),ss=document.getElementById("ss");
-  for(let h=12;h<=16;h++)hh.add(new Option(pad(h),pad(h)));
-  for(let m=0;m<60;m+=2)mm.add(new Option(pad(m),pad(m)));
-  for(let s=0;s<60;s+=10)ss.add(new Option(pad(s),pad(s)));
-  hh.value="12";mm.value="00";ss.value="00";
-})();
+// --- 着弾指定 ---
+(function(){const hh=document.getElementById("hh"),mm=document.getElementById("mm"),ss=document.getElementById("ss");
+for(let h=12;h<=16;h++)hh.add(new Option(pad(h),pad(h)));
+for(let m=0;m<60;m+=2)mm.add(new Option(pad(m),pad(m)));
+for(let s=0;s<60;s+=10)ss.add(new Option(pad(s),pad(s)));
+hh.value="12";mm.value="00";ss.value="00";})();
 
-/* モード切替 */
+// --- モード切替 ---
 const modeSel=document.getElementById("mode");
-modeSel.onchange=()=>{
-  const rev=modeSel.value==="reverse";
-  document.getElementById("normalBox").style.display=rev?"none":"block";
-  document.getElementById("reverseBox").style.display=rev?"block":"none";
-  document.getElementById("impactDisplay").style.display=rev?"none":"block";
-};
+modeSel.onchange=()=>{const rev=modeSel.value==="reverse";
+document.getElementById("normalBox").style.display=rev?"none":"block";
+document.getElementById("reverseBox").style.display=rev?"block":"none";
+document.getElementById("impactDisplay").style.display=rev?"none":"block";};
 
-/* ペット列表示 */
-document.getElementById("showPet").onchange=e=>{
-  document.getElementById("tbl").classList.toggle("hide-pet",!e.target.checked);
-};
+// --- 行追加/削除 ---
+document.getElementById("addBtn").onclick=()=>{const tr=document.createElement("tr");
+tr.innerHTML=`<td><input type="checkbox" class="pet"></td><td><input type="text" placeholder="名前"></td><td><select class="march"></select></td><td>-</td><td class="pet-time">-</td>`;
+document.getElementById("tbody").appendChild(tr);fillMarch(tr.querySelector(".march"));};
+document.getElementById("removeBtn").onclick=()=>{const rows=document.querySelectorAll("#tbody tr");if(rows.length>1)rows[rows.length-1].remove();};
 
-/* 行追加/削除 */
-document.getElementById("addBtn").onclick=()=>{
-  const tr=document.createElement("tr");
-  tr.innerHTML=`<td><input type="checkbox" class="pet"></td>
-    <td><input type="text" placeholder="名前"></td>
-    <td><select class="march"></select></td><td>-</td><td class="pet-time">-</td>`;
-  document.getElementById("tbody").appendChild(tr);
-  fillMarch(tr.querySelector(".march"));
-};
-document.getElementById("removeBtn").onclick=()=>{
-  const rows=document.querySelectorAll("#tbody tr");
-  if(rows.length>1)rows[rows.length-1].remove();
-};
-
-/* 計算ロジック（被せ） */
+// --- 計算 ---
 function computeNormal(){
-  const rally=+document.getElementById("rally").value;
-  const prep=+document.getElementById("prep").value;
-  const rows=[...document.querySelectorAll("#tbody tr")].map(r=>({
-    r,name:r.querySelector("input[type=text]").value||"Player",
-    march:+r.querySelector(".march").value
-  }));
-  const now=nowUTC();
-  const base=new Date(now.getTime()+prep*1000);
+  const rally=+document.getElementById("rally").value,prep=+document.getElementById("prep").value;
+  const rows=[...document.querySelectorAll("#tbody tr")].map(r=>({r,name:r.querySelector("input[type=text]").value||"Player",march:+r.querySelector(".march").value}));
+  const base=new Date(nowUTC().getTime()+prep*1000);
   const max=Math.max(...rows.map(x=>x.march),0);
   const impact=new Date(base.getTime()+max*1000+rally*60*1000);
-  rows.forEach(x=>{
-    const depart=new Date(base.getTime()+(max-x.march)*1000);
-    x.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
-    x.depart=depart;
-  });
+  rows.forEach(x=>{const depart=new Date(base.getTime()+(max-x.march)*1000);x.r.children[3].textContent=`${fmtUTC(depart)} UTC`;x.depart=depart;});
   document.getElementById("impactText").textContent=`${fmtUTC(impact)} UTC`;
   renderCopy(rally,rows,impact);
 }
-
-/* 着弾指定 */
 function computeReverse(){
   const rally=+document.getElementById("rallyReverse").value;
   const H=+document.getElementById("hh").value,M=+document.getElementById("mm").value,S=+document.getElementById("ss").value;
   const target=new Date(nowUTC());target.setUTCHours(H,M,S,0);
-  const rows=[...document.querySelectorAll("#tbody tr")].map(r=>({
-    r,name:r.querySelector("input[type=text]").value||"Player",
-    march:+r.querySelector(".march").value
-  }));
-  rows.forEach(x=>{
-    const depart=new Date(target.getTime()-rally*60*1000-x.march*1000);
-    x.r.children[3].textContent=`${fmtUTC(depart)} UTC`;
-    x.depart=depart;
-  });
+  const rows=[...document.querySelectorAll("#tbody tr")].map(r=>({r,name:r.querySelector("input[type=text]").value||"Player",march:+r.querySelector(".march").value}));
+  rows.forEach(x=>{const depart=new Date(target.getTime()-rally*60*1000-x.march*1000);
+  x.r.children[3].textContent=`${fmtUTC(depart)} UTC`;x.depart=depart;});
   renderCopy(rally,rows,target);
 }
-
 document.getElementById("calcBtnNormal").onclick=computeNormal;
 document.getElementById("calcBtnReverse").onclick=computeReverse;
 
-/* コピー生成 */
+// --- コピー欄 ---
 function renderCopy(rally,rows,impact){
-  const lines=[`(${rally}分集結お願いします！)`,` `];
+  const lines=[`(${rally}分集結お願いします！)`,''];
   rows.forEach(x=>lines.push(`⚪${x.name}　${fmtUTC(x.depart)} UTC`));
-  lines.push(` `,`着弾：${fmtUTC(impact)} UTC`);
+  lines.push('',`着弾：${fmtUTC(impact)} UTC`);
   document.getElementById("copyBox").textContent=lines.join("\n");
 }
-
-/* コピー */
 document.getElementById("copyBtn").onclick=async()=>{
   const text=document.getElementById("copyBox").textContent;
   try{await navigator.clipboard.writeText(text);alert("コピーしました！");}
-  catch{const ta=document.createElement("textarea");ta.value=text;
-    document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
-    alert("コピーしました！");}
+  catch{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);
+  ta.select();document.execCommand("copy");ta.remove();alert("コピーしました！");}
 };
 </script>
 </body>
